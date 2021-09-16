@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhang.backend2.dao.NvdMapper">
+
+    <sql id="NvdVO">
+        id, name, url, description, cvss2_nvd_base_score,cvss3_nvd_base_score,cvss2_nvd_vector
+        ,cvss3_nvd_vector, refer, cwe_id, cwe_name, cpe, tech_level, comp_level
+    </sql>
+
+    <select id="getList" resultType="com.zhang.backend2.model.domain.Nvd">
+        select <include refid="NvdVO"/>
+        from nvd
+    </select>
+    
+    <select id="getVulnByName" parameterType="String" resultType="com.zhang.backend2.model.domain.Nvd">
+        select <include refid="NvdVO"/>
+        from nvd
+        where name = #{name}
+    </select>
+
+    <select id="getVulnsByDescription" parameterType="String" resultType="com.zhang.backend2.model.domain.Nvd">
+        select <include refid="NvdVO"/>
+        from nvd
+        where description like #{description}
+    </select>
+</mapper>
