@@ -18,6 +18,10 @@ spring:
       name: admin
       password: admin
 
+  data:
+    mongodb:
+      uri: mongodb://123.57.77.254:27017/test
+
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
 
