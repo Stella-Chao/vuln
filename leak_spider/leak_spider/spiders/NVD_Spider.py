@@ -1,6 +1,8 @@
 import scrapy
+import time
 import scrapy_redis.spiders
-
+import pymongo
+import requests
 from leak_spider.items import LeakSpiderItem
 
 class NVD_Spider(scrapy_redis.spiders.RedisSpider):
@@ -21,44 +23,56 @@ class NVD_Spider(scrapy_redis.spiders.RedisSpider):
             yield scrapy.Request(url='https://nvd.nist.gov'+url, callback=self.detail)
 
     def detail(self, response):
-        leak = LeakSpiderItem()
-        leak['name'] = "".join(response.xpath('//*[@data-testid="page-header-vuln-id"]/text()').get())
-        leak['description'] = "".join(response.xpath('//p[@data-testid="vuln-description"]/text()').get())
-        leak['url'] = response.url
-        print(response.url)
-        cvss2_nvd_vector = response.xpath('//div[@id="Vuln2CvssPanel"]//span[@class="tooltipCvss2NistMetrics"]/text()').get()
-        cvss2_nvd_base_score = response.xpath('//div[@id="Vuln2CvssPanel"]//a[@id="Cvss2CalculatorAnchor"]/text()').get()
-        cvss3_nvd_vector = response.xpath('//div[@id="Vuln3CvssPanel"]//span[@class="tooltipCvss3NistMetrics"]/text()').get()
-        cvss3_nvd_base_score = response.xpath('//div[@id="Vuln3CvssPanel"]//a[@id="Cvss3CalculatorAnchor"]/text()').get()
-        references = response.xpath('//*[@data-testid="vuln-hyperlinks-link-0"]/a/text()').get()
-        if cvss3_nvd_vector == None:
-            cvss3_nvd_vector = ''
+        name = "".join(response.xpath('//*[@data-testid="page-header-vuln-id"]/text()').get())
+        # 获取vuln name 后请求api, 存入mongodb
+        vuln = requests.get('https://services.nvd.nist.gov/rest/json/cve/1.0/'+name).json()['result']['CVE_Items'][0]
+        #
+        time.sleep(2)
+        client = pymongo.MongoClient(host='localhost', port=27017)
+        collection = client.vuln.nvd
+        result = collection.insert_one(vuln)
 
-        if cvss2_nvd_vector == None:
-            cvss2_nvd_vector = ''
+        print(result)
 
-        if cvss3_nvd_base_score == None:
-            cvss3_nvd_base_score = response.xpath('//div[@id="Vuln3CvssPanel"]//a[@id="Cvss3NistCalculatorAnchor"]/text()').get()
-            if cvss3_nvd_base_score == None:
-                cvss3_nvd_base_score = 'N/A'
 
-        if references == None:
-            references = response.xpath('//*[@data-testid="vuln-hyperlinks-link-2"]/a/text()').get()
-            if references == None:
-                references = ''
-        leak['cvss2_nvd_vector'] = "".join(cvss2_nvd_vector)
-        leak['cvss2_nvd_base_score'] = "".join(cvss2_nvd_base_score)
-        print(type(cvss3_nvd_base_score))
-        print(cvss3_nvd_base_score)
-        leak['cvss3_nvd_vector'] = "".join(cvss3_nvd_vector)
-        leak['cvss3_nvd_base_score'] = "".join(cvss3_nvd_base_score)
-        leak['references'] = "".join(references)
-        # cwe_id 是 NVD-CWE-Other 时，<a> => <span>
-        cwe_id = response.xpath('//*[@data-testid="vuln-CWEs-link-0"]/a/text()').get()
-        if cwe_id == None:
-            cwe_id = response.xpath('//*[@data-testid="vuln-CWEs-link-0"]/span/text()').get()
-        leak['cwe_id'] = "".join(cwe_id)
-        leak['cwe_name'] = "".join(response.xpath('//*[@data-testid="vuln-CWEs-link-0"]/a/text()').get())
-        leak['cpe'] = ""   # *************有问题**************
+        # leak = LeakSpiderItem()
+        # leak['name'] = "".join(response.xpath('//*[@data-testid="page-header-vuln-id"]/text()').get())
+        # leak['description'] = "".join(response.xpath('//p[@data-testid="vuln-description"]/text()').get())
+        # leak['url'] = response.url
+        # print(response.url)
+        # cvss2_nvd_vector = response.xpath('//div[@id="Vuln2CvssPanel"]//span[@class="tooltipCvss2NistMetrics"]/text()').get()
+        # cvss2_nvd_base_score = response.xpath('//div[@id="Vuln2CvssPanel"]//a[@id="Cvss2CalculatorAnchor"]/text()').get()
+        # cvss3_nvd_vector = response.xpath('//div[@id="Vuln3CvssPanel"]//span[@class="tooltipCvss3NistMetrics"]/text()').get()
+        # cvss3_nvd_base_score = response.xpath('//div[@id="Vuln3CvssPanel"]//a[@id="Cvss3CalculatorAnchor"]/text()').get()
+        # references = response.xpath('//*[@data-testid="vuln-hyperlinks-link-0"]/a/text()').get()
+        # if cvss3_nvd_vector == None:
+        #     cvss3_nvd_vector = ''
+        #
+        # if cvss2_nvd_vector == None:
+        #     cvss2_nvd_vector = ''
+        #
+        # if cvss3_nvd_base_score == None:
+        #     cvss3_nvd_base_score = response.xpath('//div[@id="Vuln3CvssPanel"]//a[@id="Cvss3NistCalculatorAnchor"]/text()').get()
+        #     if cvss3_nvd_base_score == None:
+        #         cvss3_nvd_base_score = 'N/A'
+        #
+        # if references == None:
+        #     references = response.xpath('//*[@data-testid="vuln-hyperlinks-link-2"]/a/text()').get()
+        #     if references == None:
+        #         references = ''
+        # leak['cvss2_nvd_vector'] = "".join(cvss2_nvd_vector)
+        # leak['cvss2_nvd_base_score'] = "".join(cvss2_nvd_base_score)
+        # print(type(cvss3_nvd_base_score))
+        # print(cvss3_nvd_base_score)
+        # leak['cvss3_nvd_vector'] = "".join(cvss3_nvd_vector)
+        # leak['cvss3_nvd_base_score'] = "".join(cvss3_nvd_base_score)
+        # leak['references'] = "".join(references)
+        # # cwe_id 是 NVD-CWE-Other 时，<a> => <span>
+        # cwe_id = response.xpath('//*[@data-testid="vuln-CWEs-link-0"]/a/text()').get()
+        # if cwe_id == None:
+        #     cwe_id = response.xpath('//*[@data-testid="vuln-CWEs-link-0"]/span/text()').get()
+        # leak['cwe_id'] = "".join(cwe_id)
+        # leak['cwe_name'] = "".join(response.xpath('//*[@data-testid="vuln-CWEs-link-0"]/a/text()').get())
+        # leak['cpe'] = ""   # *************有问题**************
 
-        return leak
+        # return leak

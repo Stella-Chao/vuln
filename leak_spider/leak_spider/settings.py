@@ -26,10 +26,10 @@ DB_SETTINGS = {
     },
 }
 
-# MONGO_URI = "123.57.77.254:27017"  # 主机IP
-# MONGO_PORT = 27017  # 端口号
-# MONGO_DATABASE = "leak"  # 库名
-# MONGO_COLL = "nvd"  # collection名
+MONGO_URI = "127.0.0.1:27017"  # 主机IP
+MONGO_PORT = 27017  # 端口号
+MONGO_DATABASE = "vuln"  # 库名
+MONGO_COLL = "nvd"  # collection名
 # MONGO_USER = "admin" #用户名
 # MONGO_PSW = "zhanghe" #用户密码
 
