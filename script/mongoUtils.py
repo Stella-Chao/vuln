@@ -14,21 +14,26 @@ def connect_nvd():
     return collection
 
 # 连接 cnvd (collection)
-def connect_nvd():
+def connect_cnvd():
     collection = connect_vuln().cnvd
     return collection
 
 # 连接 cnnvd (collection)
-def connect_nvd():
+def connect_cnnvd():
     collection = connect_vuln().cnnvd
     return collection
 
 # 连接 device (collection)
-def connect_nvd():
+def connect_device():
     collection = connect_vuln().device
     return collection
 
 # 连接 poc (collection)
-def connect_nvd():
+def connect_poc():
     collection = connect_vuln().poc
+    return collection
+
+# 连接 iotvd (collection)
+def connect_iotvd():
+    collection = connect_vuln().iotvd
     return collection
