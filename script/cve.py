@@ -1,3 +1,4 @@
+import re
 import time
 import requests
 from mongoUtils import connect_nvd
@@ -47,5 +48,19 @@ def get_cpe_by_cveId(cve_id):
     query = {"cve": {"CVE_data_meta": {"ID": cve_id}}}
     result = collection.find_one(query)
     print(result)
+
+# 统计描述信息中含有iot/device的漏洞数
+def iot_num():
+    collection = connect_nvd()
+    print(collection)
+    i_num = 0
+    print("漏洞总数：", collection.count_documents({}))
+    for item in collection.find():
+        for description in item['cve']['description']['description_data']:
+            if description['value'].find('device') != -1 or description['value'].find('iot') != -1\
+                    or description['value'].find('Device') != -1 or description['value'].find('IOT') != -1:
+                i_num += 1
+                break
+    print(i_num)
 
 
