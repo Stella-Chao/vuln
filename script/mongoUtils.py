@@ -37,3 +37,8 @@ def connect_poc():
 def connect_iotvd():
     collection = connect_vuln().iotvd
     return collection
+
+# 连接 exploit (collection)
+def connect_exploit():
+    collection = connect_vuln().exploit
+    return collection
