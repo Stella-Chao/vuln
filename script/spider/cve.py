@@ -1,7 +1,7 @@
 import re
 import time
 import requests
-from mongoUtils import connect_nvd
+from utils.mongoUtils import connect_nvd
 
 def get_all_cve():
     collection = connect_nvd()

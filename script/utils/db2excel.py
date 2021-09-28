@@ -1,4 +1,4 @@
-import sql
+from utils import sql
 import pandas as pd
 
 def db_to_excel():

@@ -1,7 +1,7 @@
 import requests
 import logging
 import time
-from mongoUtils import connect_iotvd
+from utils.mongoUtils import connect_iotvd
 
 '''2021/09/24'''
 '''青莲云 IOTVD (物联网安全漏洞库): 699个漏洞 70页'''
