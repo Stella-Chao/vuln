@@ -1,6 +1,13 @@
-package com.zhang.backend2.model.domain.cve;
+package com.zhang.backend2.model.domain;
 
-public class CvssV2 {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class CvssV2 implements Serializable {
+
+    private static final long serialVersionUID = 5615972665822064452L;
 
     /* 版本信息 */
     private String version;

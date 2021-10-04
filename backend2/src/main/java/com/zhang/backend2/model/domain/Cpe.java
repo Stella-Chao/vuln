@@ -1,8 +1,13 @@
-package com.zhang.backend2.model.domain.cve;
+package com.zhang.backend2.model.domain;
 
+import lombok.Data;
+
+import java.io.Serializable;
 import java.util.List;
+@Data
+public class Cpe implements Serializable {
 
-public class Cpe {
+    private static final long serialVersionUID = 5648164685455600686L;
 
     /* 脆弱 */
     private boolean vulnerable;
@@ -17,5 +22,5 @@ public class Cpe {
     private String versionEndExcluding;
 
     /* cpe name */
-    private List<Object> cpe_name;
+    private List<String> cpe_name;
 }

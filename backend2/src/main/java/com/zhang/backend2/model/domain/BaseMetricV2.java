@@ -1,6 +1,13 @@
-package com.zhang.backend2.model.domain.cve;
+package com.zhang.backend2.model.domain;
 
-public class BaseMetricV2 {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class BaseMetricV2 implements Serializable {
+
+    private static final long serialVersionUID = -7394203293996260397L;
 
     /* CVSS2*/
     private CvssV2 cvssV2;

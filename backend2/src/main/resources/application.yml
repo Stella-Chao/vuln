@@ -20,7 +20,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://123.57.77.254:27017/test
+      uri: mongodb://zh:zhanghe@123.57.77.254:27017/vuln
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
