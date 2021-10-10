@@ -1,4 +1,5 @@
 import pymongo
+import pandas as pd
 from config import MONGO_HOST,MONGO_USER,MONGO_PASSWORD
 
 def connect_vuln():
@@ -46,6 +47,16 @@ def connect_exploit():
 # 连接 tf_iot (collection)
 def connect_tfiot():
     collection = connect_vuln().tf_iot
+    return collection
+
+# 连接 jvn_db (collection)
+def connect_jvndb():
+    collection = connect_vuln().jvndb
+    return collection
+
+# 连接 cwe (collection)
+def connect_cwe():
+    collection = connect_vuln().cwe
     return collection
 
 '''从cve中抽取出有用字段存入tfiot'''
@@ -96,3 +107,40 @@ def convert1():
         conn2.insert_one(vuln)
         print('正在转换第{}条记录'.format(str(count)))
         count += 1
+
+'''训练数据准备：CVE-ID  Description  CVSS3_Score(等级)
+    评级        Base Score        label
+    Low         0.1 - 3.9           1
+    Medium      4.0 - 6.9           2
+    High        7.0 - 8.9           3
+    Critical    9.0 - 10.0          4
+'''
+def get_train_data():
+    df = pd.DataFrame(columns=['CVE-ID','Description','Label'])
+    conn = connect_tfiot()
+    count = 1
+    for item in conn.find():
+        if ("cvss3" in item) & ("cvssV3" in item['cvss3']):
+            print('test...')
+            cve_id = item['CVE-ID']
+            description = item['description']
+            baseScore = item['cvss3']['cvssV3']['baseScore']
+            if (baseScore >= 0.1) & (baseScore <= 3.9):
+                label = 1
+            elif (baseScore >= 4.0) & (baseScore <= 6.9):
+                label = 2
+            elif (baseScore >= 7.0) & (baseScore <= 8.9):
+                label = 3
+            else:
+                label = 4
+            df0 = pd.DataFrame({'CVE-ID':cve_id, 'Description':description, 'Label':label}, index=["0"])
+            df = df.append(df0,ignore_index=True)
+            print('抽取第{}个漏洞...'.format(count))
+            count += 1
+        # if count > 10:
+        #     print(df)
+        #     break
+    df.to_csv("../data/data01.csv")
+
+if __name__ == '__main__':
+    get_train_data()
