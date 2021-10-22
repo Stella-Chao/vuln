@@ -6,52 +6,72 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'RankingBoard',
   data () {
     return {
-      config: {
-        data: [
-          {
-            name: 'SQL',
-            value: 55
-          },
-          {
-            name: 'XSS',
-            value: 120
-          },
-          {
-            name: '钓鱼',
-            value: 78
-          },
-          {
-            name: '物联网',
-            value: 66
-          },
-          {
-            name: '文件上传',
-            value: 80
-          },
-          {
-            name: '远程执行',
-            value: 45
-          },
-          {
-            name: '弱口令',
-            value: 29
-          },
-          {
-            name: '摄像头',
-            value: 29
-          },
-          {
-            name: '路由器',
-            value: 29
-          }
-        ],
-        rowNum: 9
-      }
+      config: {},
+      result: {}
     }
+  },
+  methods: {
+    createData() {
+      axios.get('http://127.0.0.1:9090/dashboard/data02')
+        .then(res=>{
+          console.log(res.data)
+          this.result = JSON.parse(res.data['CVE类别'])
+          console.log(typeof this.result)
+          this.config = {
+            data: [
+              {
+                name: 'SQL注入',
+                value: this.result['SQL注入']
+              },
+              {
+                name: '执行代码',
+                value: this.result['Execute Code']
+              },
+              {
+                name: '目录遍历',
+                value: this.result['目录遍历']
+              },
+              {
+                name: '获取信息',
+                value: this.result['获取信息']
+              },
+              {
+                name: '获取权限',
+                value: this.result['获取权限']
+              },
+              {
+                name: '溢出',
+                value: this.result['Overflow']
+              },
+              {
+                name: 'XSS',
+                value: this.result['XSS']
+              },
+              {
+                name: '绕过',
+                value: this.result['绕过']
+              },
+              {
+                name: 'DoS',
+                value: this.result['DoS']
+              }
+            ],
+            rowNum: 9
+          }
+        })
+    }
+  },
+  mounted () {
+    const { createData } = this
+
+    createData()
+
+    setInterval(createData, 60000)
   }
 }
 </script>

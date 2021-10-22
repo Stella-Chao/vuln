@@ -29,75 +29,83 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Cards',
   data () {
     return {
-      cards: []
+      cards: [],
+      result: []
     }
   },
   methods: {
     createData () {
       const { randomExtend } = this
-
-      this.cards = new Array(5).fill(0).map((foo, i) => ({
-        title: '检测时段' + (i + i),
-        total: {
-          number: [randomExtend(9000, 10000)],
-          content: '{nt}',
-          textAlign: 'right',
-          style: {
-            fill: '#ea6027',
-            fontWeight: 'bold'
-          }
-        },
-        num: {
-          number: [randomExtend(30, 60)],
-          content: '{nt}',
-          textAlign: 'right',
-          style: {
-            fill: '#26fcd8',
-            fontWeight: 'bold'
-          }
-        },
-        ring: {
-          series: [
-            {
-              type: 'gauge',
-              startAngle: -Math.PI / 2,
-              endAngle: Math.PI * 1.5,
-              arcLineWidth: 13,
-              radius: '80%',
-              data: [
-                { name: '资金占比', value: randomExtend(40, 60) }
-              ],
-              axisLabel: {
-                show: false
-              },
-              axisTick: {
-                show: false
-              },
-              pointer: {
-                show: false
-              },
-              backgroundArc: {
-                style: {
-                  stroke: '#224590'
-                }
-              },
-              details: {
-                show: true,
-                formatter: '高危占比{value}%',
-                style: {
-                  fill: '#1ed3e5',
-                  fontSize: 20
+      axios.get('http://127.0.0.1:9090/dashboard/data04')
+        .then(res=>{
+          this.result = res.data
+        })
+      this.cards = []
+      for (let i in this.result) {
+        this.cards.push({
+          title: this.result[i]['type'],
+          total: {
+            number: [this.result[i]['总数']],
+            content: '{nt}',
+            textAlign: 'right',
+            style: {
+              fill: '#ea6027',
+              fontWeight: 'bold'
+            }
+          },
+          num: {
+            number: [this.result[i]['高危']],
+            content: '{nt}',
+            textAlign: 'right',
+            style: {
+              fill: '#26fcd8',
+              fontWeight: 'bold'
+            }
+          },
+          ring: {
+            series: [
+              {
+                type: 'gauge',
+                startAngle: -Math.PI / 2,
+                endAngle: Math.PI * 1.5,
+                arcLineWidth: 13,
+                radius: '80%',
+                data: [
+                  { name: '资金占比', value: randomExtend(40, 60) }
+                ],
+                axisLabel: {
+                  show: false
+                },
+                axisTick: {
+                  show: false
+                },
+                pointer: {
+                  show: false
+                },
+                backgroundArc: {
+                  style: {
+                    stroke: '#224590'
+                  }
+                },
+                details: {
+                  show: true,
+                  formatter: '高危占比{value}%',
+                  style: {
+                    fill: '#1ed3e5',
+                    fontSize: 20
+                  }
                 }
               }
-            }
-          ],
-          color: ['#03d3ec']
+            ],
+            color: ['#03d3ec']
         }
-      }))
+      })
+      }
     },
     randomExtend (minNum, maxNum) {
       if (arguments.length === 1) {
@@ -112,7 +120,7 @@ export default {
 
     createData()
 
-    setInterval(this.createData, 30000)
+    setInterval(this.createData, 60000)
   }
 }
 </script>

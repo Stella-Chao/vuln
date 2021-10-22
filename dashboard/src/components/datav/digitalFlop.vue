@@ -20,136 +20,142 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'DigitalFlop',
   data () {
     return {
-      digitalFlopData: []
+      digitalFlopData: [],
+      result: []
     }
   },
   methods: {
     createData () {
       const { randomExtend } = this
-
-      this.digitalFlopData = [
-        {
-          title: '漏洞总数',
-          number: {
-            number: [randomExtend(20000, 30000)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#4d99fc',
-              fontWeight: 'bold'
+      axios.get('http://127.0.0.1:9090/dashboard/data01')
+        .then(res=>{
+          this.result = res.data
+          this.digitalFlopData = [
+            {
+              title: '漏洞总数',
+              number: {
+                number: [this.result['漏洞总数量']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#4d99fc',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+            },
+            {
+              title: '高危',
+              number: {
+                number: [this.result['高危漏洞']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#f46827',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+            },
+            {
+              title: '中危',
+              number: {
+                number: [this.result['中危漏洞']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#40faee',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+            },
+            {
+              title: '低危',
+              number: {
+                number: [this.result['低危漏洞']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#4d99fc',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+              },
+            {
+              title: 'POC',
+              number: {
+                number: [this.result['POC数量']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#f46827',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+            },
+            {
+              title: '当日新增',
+              number: {
+                number: [this.result['当日新增']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#40faee',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+            },
+            {
+              title: '近一周',
+              number: {
+                number: [this.result['近一周新增数量']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#4d99fc',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+              },
+            {
+              title: '近一月',
+              number: {
+                number: [this.result['近一月新增数量']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#f46827',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
+              },
+            {
+              title: '近一年',
+              number: {
+                number: [this.result['近一年新增数量']],
+                content: '{nt}',
+                textAlign: 'right',
+                style: {
+                  fill: '#40faee',
+                  fontWeight: 'bold'
+                }
+              },
+              unit: '个'
             }
-          },
-          unit: '个'
-        },
-        {
-          title: 'SQL注入',
-          number: {
-            number: [randomExtend(20, 30)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#f46827',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: '跨站脚本',
-          number: {
-            number: [randomExtend(20, 30)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#40faee',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: '弱口令',
-          number: {
-            number: [randomExtend(10, 20)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#4d99fc',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: '钓鱼',
-          number: {
-            number: [randomExtend(5, 10)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#f46827',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: '文件上传',
-          number: {
-            number: [randomExtend(5, 10)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#40faee',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: 'XSS',
-          number: {
-            number: [randomExtend(5, 10)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#4d99fc',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: '摄像头',
-          number: {
-            number: [randomExtend(5, 10)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#f46827',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: '远程执行',
-          number: {
-            number: [randomExtend(5, 10)],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#40faee',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        }
-      ]
+        ]
+        })
+      
     },
     randomExtend (minNum, maxNum) {
       if (arguments.length === 1) {
@@ -164,7 +170,7 @@ export default {
 
     createData()
 
-    setInterval(createData, 30000)
+    setInterval(createData, 60000)
   }
 }
 </script>
