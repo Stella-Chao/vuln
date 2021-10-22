@@ -1,2 +1,8 @@
-package com.zhang.backend2.config;public class mongoConfig {
+package com.zhang.backend2.config;
+
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MongoConfig {
+
 }
