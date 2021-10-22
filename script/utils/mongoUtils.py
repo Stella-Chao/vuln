@@ -59,6 +59,17 @@ def connect_cwe():
     collection = connect_vuln().cwe
     return collection
 
+# 连接 data01 (collection)
+def connect_data01():
+    collection = connect_vuln().data01
+    return collection
+
+# 连接 iot (collection)
+def connect_iot():
+    connection = connect_vuln().iot
+    return connection
+
+
 '''从cve中抽取出有用字段存入tfiot'''
 def convert1():
     conn1 = connect_nvd()
@@ -142,5 +153,41 @@ def get_train_data():
         #     break
     df.to_csv("../data/data01.csv")
 
+# 查找没有 cvssV3_Score的 CVE-ID
+def get_no_cvss3():
+    conn = connect_tfiot()
+    for item in conn.find():
+        if "cvssV3" not in item["cvss3"]:
+            print(item["CVE-ID"])
+
+# vuln.data01 中一个漏洞可能对应多个 type, 拆分开存入 csv
+def get_train_data_02():
+    type_dict = {"None":0, "":1, "":2, "":3, "":4, "":5, "":6, "":7, "":8, "":9, "":10, "":11, "":12, "":13}
+    df = pd.DataFrame(columns=['CVE-ID', 'Description', 'Label'])
+    conn = connect_data01()
+    for item in conn.find():
+        cve_id = item["CVE-ID"]
+        description = item["description"]
+        for type in item["type"]:
+            label = type_dict[type]
+            df0 = pd.DataFrame({'CVE-ID': cve_id, 'Description': description, 'Label': label}, index=["0"])
+            df = df.append(df0, ignore_index=True)
+
+def get_train_data_03():
+    pass
+
+# MongoDB 去重
+def distinct():
+    con = connect_iot()
+    # 选中所有不重复的 CVE-ID
+    for item in con.distinct('CVE-ID'):
+        # 复制第一条 CVE-ID相同的数据
+        repeating = con.find_one({'CVE-ID' : item})
+        # 删除所有 CVE-ID相同的数据
+        result = con.delete_many({'CVE-ID' : item})
+        con.insert_one(repeating)
+
 if __name__ == '__main__':
-    get_train_data()
+    # get_train_data()
+    # get_no_cvss3()
+    distinct()
