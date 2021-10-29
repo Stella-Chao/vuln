@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Repository
 public class TFiotDao {
@@ -40,6 +40,7 @@ public class TFiotDao {
     }
 
     /* 先只按 cvssV2 来统计*/
+
     //统计超危漏洞数量
     public Long getCriticalNum() {
         return null;
@@ -47,24 +48,38 @@ public class TFiotDao {
     //统计高危漏洞数量
     public Long getHighNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("HIGH"));
+        query.addCriteria(Criteria.where("baseMetricV2.severity").is("高危"));
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计中危漏洞数量
     public Long getMediumNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("MEDIUM"));
+        query.addCriteria(Criteria.where("baseMetricV2.severity").is("中危"));
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计低危漏洞数量
     public Long getLowNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("LOW"));
+        query.addCriteria(Criteria.where("baseMetricV2.severity").is("低危"));
         return mongoTemplate.count(query,TFiot.class);
     }
-    //模糊查询漏洞描述信息
-    public List<TFiot> findByDescription(String description) {
-        return null;
+    //统计高危漏洞
+    public List<TFiot> getHighVuln() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("baseMetricV2.severity").is("高危"));
+        return mongoTemplate.find(query,TFiot.class);
+    }
+    //统计中危漏洞
+    public List<TFiot> getMediumVuln() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("baseMetricV2.severity").is("中危"));
+        return mongoTemplate.find(query,TFiot.class);
+    }
+    //统计低危漏洞
+    public List<TFiot> getLowVuln() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("baseMetricV2.severity").is("低危"));
+        return mongoTemplate.find(query,TFiot.class);
     }
 
     //今日新增数量
@@ -126,13 +141,26 @@ public class TFiotDao {
     //获取含有POC的漏洞数
     public Long getPocNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("POC").is("").not());
+        query.addCriteria(Criteria.where("POC").ne(""));
         return mongoTemplate.count(query,TFiot.class);
     }
 
     //多条件查询
-    public List<TFiot> findByMulti(HashMap map) {
-        return null;
+    public List<TFiot> findByMulti(String severity, String description) {
+        Query query = new Query();
+        Pattern pattern=Pattern.compile(".*?" + description + ".*", Pattern.CASE_INSENSITIVE);
+        System.out.println(pattern);
+        query.addCriteria(Criteria.where("baseMetricV2.severity").is(severity));
+        query.addCriteria(Criteria.where("description").regex(pattern));
+        return mongoTemplate.find(query,TFiot.class);
+    }
+
+    //模糊查询漏洞描述信息
+    public List<TFiot> findByDescription(String description) {
+        Query query = new Query();
+        Pattern pattern=Pattern.compile(".*?" + description + ".*", Pattern.CASE_INSENSITIVE);
+        query.addCriteria(Criteria.where("description").regex(pattern));
+        return mongoTemplate.find(query,TFiot.class);
     }
 
     //获取视频监控类漏洞数量
@@ -143,7 +171,7 @@ public class TFiotDao {
         query1.addCriteria(Criteria.where("Type02").is("vedio"));
         json.put("总数",mongoTemplate.count(query1,TFiot.class));
         Query query2 = new Query();
-        query2.addCriteria(Criteria.where("Type02").is("vedio").and("baseMetricV2.severity").is("HIGH"));
+        query2.addCriteria(Criteria.where("Type02").is("vedio").and("baseMetricV2.severity").is("高危"));
         json.put("高危",mongoTemplate.count(query2,TFiot.class));
         return json;
     }
@@ -228,31 +256,31 @@ public class TFiotDao {
         List<TFiot> vulns = mongoTemplate.findAll(TFiot.class);
         for (TFiot item: vulns) {
             for (String type : item.getType01()) {
-                if (type.equals("Denial Of Service")) {
+                if (type.equals("拒绝服务")) {
                     doss ++ ;
-                } else if (type.equals("Execute Code")) {
+                } else if (type.equals("执行代码")) {
                     execute ++;
-                } else if (type.equals("Overflow")) {
+                } else if (type.equals("溢出")) {
                     overflow ++;
-                } else if (type.equals("Cross Site Scripting")) {
+                } else if (type.equals("跨站脚本")) {
                     xss ++;
-                } else if (type.equals("Directory traversal")) {
+                } else if (type.equals("目录遍历")) {
                     directory ++;
-                } else if (type.equals("Bypass a restriction or similar")) {
+                } else if (type.equals("绕过")) {
                     bypass ++;
-                } else if (type.equals("Obtain Information")) {
+                } else if (type.equals("获取信息")) {
                     gain_infor ++;
-                } else if (type.equals("Gain privileges")) {
+                } else if (type.equals("获取权限")) {
                     gain_privilege ++;
-                } else if (type.equals("Sql Injection")) {
+                } else if (type.equals("SQL注入")) {
                     sql ++;
-                } else if (type.equals("File Inclusion")) {
+                } else if (type.equals("文件包含")) {
                     file_inclusion ++;
-                } else if (type.equals("Memory corruption")) {
+                } else if (type.equals("内存错误")) {
                     memory ++;
-                } else if (type.equals("CSRF")) {
+                } else if (type.equals("跨站请求伪造")) {
                     csrf ++;
-                } else if (type.equals("Http response splitting")) {
+                } else if (type.equals("HTTP响应拆分")) {
                     http ++;
                 } else {
                     none ++;
