@@ -9,10 +9,6 @@ from hashlib import md5
 appid = '20200202000379572'
 appkey = 'pjNWyL2apr4DOb1qeaPh'
 
-# 'zh' => 'en'
-from_lang = 'zh'
-to_lang =  'en'
-
 endpoint = 'http://api.fanyi.baidu.com'
 path = '/api/trans/vip/translate'
 url = endpoint + path
@@ -23,8 +19,8 @@ url = endpoint + path
 def make_md5(s, encoding='utf-8'):
     return md5(s.encode(encoding)).hexdigest()
 
-# 中文 => 英文
-def translate(query):
+# 翻译模块 参数 (文本，源语言，目标语言)
+def translate(query, from_lang, to_lang):
     salt = random.randint(32768, 65536)
     sign = make_md5(appid + query + str(salt) + appkey)
 

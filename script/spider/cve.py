@@ -1,3 +1,4 @@
+import gc
 import re
 import time
 import requests
@@ -31,10 +32,11 @@ def hardware_num():
     print("漏洞总数: ", collection.count_documents({}))
     for item in collection.find():
         flag = 0
+        description = item['cve']['description']['description_data']
         for node in item['configurations']['nodes']:
             for cpe in node['cpe_match']:
-                if cpe['cpe23Uri'].find(':h:') != -1:  # 漏洞发生在硬件平台上
-                    print(cpe['cpe23Uri'])
+                # if (cpe['cpe23Uri'].find(':h:') != -1) & (description[0]['value'].find('device') != -1 or description[0]['value'].find('Device') != -1):  # 漏洞发生在硬件平台上
+                #     print(cpe['cpe23Uri'])
                     h_count += 1
                     flag = 1
                     break
@@ -64,8 +66,8 @@ def iot_num():
     print("漏洞总数：", collection.count_documents({}))
     for item in collection.find():
         for description in item['cve']['description']['description_data']:
-            if description['value'].find('device') != -1 or description['value'].find('iot') != -1\
-                    or description['value'].find('Device') != -1 or description['value'].find('IOT') != -1:
+            if description['value'].find('device') != -1 \
+                    or description['value'].find('Device') != -1:
                 i_num += 1
                 break
     print(i_num)
@@ -116,8 +118,11 @@ def update_type02():
             # 更新类型2
             connection.update_one({"CVE-ID": item["CVE-ID"]}, {"$set": {"Type02": "vedio"}})
 
+# 统计缺少CPE的漏洞数目
 if __name__ == '__main__':
     # get_all_cve()
     # nvd2iot()
     # get_by_cveID("CVE-2021-34947")
-    update_type02()
+    # update_type02()
+    hardware_num()
+    # iot_num()

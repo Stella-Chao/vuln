@@ -1,7 +1,7 @@
 '''文档之间的转换'''
 import time
 
-from mongoUtils import connect_iot2,connect_iot,connect_jvndb
+from mongoUtils import connect_iot2,connect_iot,connect_jvndb2,connect_exploit
 from translate import translate
 from spider.spider_utils import random_sleep
 
@@ -17,7 +17,7 @@ def convert():
 
 def translate_title():
     iot = connect_iot2()
-    jvn = connect_jvndb()
+    jvn = connect_jvndb2()
     for item in iot.find():
         id = item["CVE-ID"]
         if item["title"] == "请查看详情":
@@ -26,7 +26,10 @@ def translate_title():
                 title = jvn_vuln[0]["title"]
                 time.sleep(1)
                 random_sleep()
-                new_title = translate(title, 'en', 'zh')
+                try:
+                    new_title = translate(title, 'jp', 'zh')
+                except:
+                    continue
                 print(id, " => ", new_title)
             else:
                 new_title = "请查看详情"
@@ -103,27 +106,89 @@ def tranlate_type01():
             new = "其他"
         iot2.update_one({"CVE-ID": id}, {"$set": {"Type01": new}})
 
-'''将CVSSV2中的危险级别改为中文'''
+'''将cvssV3中的危险级别改为中文'''
 def convert_severity():
     iot = connect_iot2()
     for item in iot.find():
         id = item["CVE-ID"]
-        if "baseMetricV2" in item:
-            if "severity" in item["baseMetricV2"]:
-                severity = item["baseMetricV2"]["severity"]
-                if item["baseMetricV2"]["severity"] == "HIGH":
-                    severity = "高危"
-                if item["baseMetricV2"]["severity"] == "MEDIUM":
-                    severity = "中危"
-                if item["baseMetricV2"]["severity"] == "LOW":
-                    severity = "低危"
-                iot.update_one({"CVE-ID": id}, {"$set": {"baseMetricV2.severity": severity}})
+        if "baseMetricV3" in item:
+            severity = item["baseMetricV3"]["cvssV3"]["baseSeverity"]
+            if severity == "CRITICAL":
+                severity = "超危"
+            if severity == "HIGH":
+                severity = "高危"
+            if severity == "MEDIUM":
+                severity = "中危"
+            if severity == "LOW":
+                severity = "低危"
+            iot.update_one({"CVE-ID": id}, {"$set": {"baseMetricV3.cvssV3.baseSeverity": severity}})
 
+'''cvssV3的攻击向量转化为中文'''
+def convert_cvssv3_attacker():
+    iot = connect_iot2()
+    count = 0
+    for item in iot.find():
+        if "baseMetricV3" in item:
+            id = item["CVE-ID"]
+            vector = item["baseMetricV3"]["cvssV3"]["attackVector"]
+            if vector == "NETWORK":
+                new = "网络"
+            elif vector == "LOCAL":
+                new = "本地"
+            elif vector == "PHYSICAL":
+                new = "物理"
+            else:
+                new = "邻接"
+            iot.update_one({"CVE-ID": id}, {"$set": {"baseMetricV3.cvssV3.attackVector": new}})
+            count += 1
+    print(count)
+
+def translate_description():
+    iot = connect_iot2()
+    for item in iot.find():
+        id = item["CVE-ID"]
+        description = item["description"]
+        flag = item["Type04"]
+        if flag == "1":
+            continue    # 表示已翻译过
+        time.sleep(1)
+        random_sleep()
+        try:
+            new_desc = translate(description, 'en', 'zh')
+        except:
+            continue
+        print(id, " => ", new_desc)
+        iot.update_one({"CVE-ID": id}, {"$set": {"description": new_desc, "Type04": "1"}})
+
+def getPocNum():
+    iot = connect_iot2()
+    poc = connect_exploit()
+    count = 0
+    for p in poc.find():
+        cve = p["cve"]
+        cveid = "CVE-" + cve
+        result = iot.find_one({"CVE-ID": cveid})
+        if result != None:
+            print(cveid)
+            count += 1
+    print("IOT漏洞共有POC {}个...".format(count))
+
+def fun():
+    poc = connect_exploit()
+    for item in poc.find():
+        id = item["edb_id"]
+        url = item["code_url"]
+        new = url.replace("/exploits//","/")
+        poc.update_one({"edb_id": id}, {"$set": {"code_url": new}})
 
 if __name__ == '__main__':
     # convert()
     # translate_title()
     # title2()
+    # convert_cvssv3_attacker()
     # translate_title2()
-    tranlate_type01()
+    # tranlate_type01()
     # convert_severity()
+    # translate_description()
+    # getPocNum()
+    fun()

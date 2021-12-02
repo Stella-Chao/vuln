@@ -1,6 +1,7 @@
 import requests
 import time
 import random
+from retrying import retry
 
 # PC端的 User-Agent
 user_agent_pc = [
@@ -27,7 +28,7 @@ user_agent_pc = [
 
 def get_proxy():
     return requests.get("http://127.0.0.1:5010/get/").json()
-
+    # return requests.get("http://10.0.3.31:5010/get/").json()
 
 # 随机睡眠
 def random_sleep(mu=1, sigma=0.4):
@@ -39,3 +40,16 @@ def random_sleep(mu=1, sigma=0.4):
     if secs <= 0:
         secs = mu  # 太小则重置为平均值
     time.sleep(secs)
+
+
+def retry_error(exception):
+    print('捕获到错误...')
+    time.sleep(30)
+    return isinstance(exception, Exception)
+
+# 发生错误，重试三次
+@retry(stop_max_attempt_number=10)
+def get(url,proxy,headers):
+    requests.packages.urllib3.disable_warnings()
+    res = requests.get(url, headers=headers, verify=False, proxies={"http": "http://{}".format(proxy)},stream=True)
+    return res

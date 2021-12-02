@@ -1,37 +1,38 @@
+import time
 import requests
 import re
-import time
 import random
 from utils.mongoUtils import connect_jvndb
 from bs4 import BeautifulSoup
-from spider_utils import user_agent_pc, get_proxy
+from spider_utils import user_agent_pc, get_proxy, random_sleep, get
 
 urls = []
-headers = {
-    'User-Agent': random.choice(user_agent_pc)
-}
 
 def get_urls():
+    headers = {
+        'User-Agent': random.choice(user_agent_pc),
+        'Connection': 'close'
+    }
     proxy = get_proxy().get("proxy")
     base = 'https://jvndb.jvn.jp/'
-    search_base = 'https://jvndb.jvn.jp/search/index.php?mode=_vulnerability_search_IA_VulnSearch&lang=ja&keyword=&useSynonym=1&vendor=&product=&datePublicFromMonth=01&datePublicFromYear={}&datePublicToMonth={}&datePublicToYear={}&datePublicToMonth={}&dateLastPublishedFromMonth=&dateLastPublishedFromYear=&dateLastPublishedToMonth=&dateLastPublishedToYear=&cwe=&searchProductId=&pageNo={}'
+    search_base = 'https://jvndb.jvn.jp/search/index.php?mode=_vulnerability_search_IA_VulnSearch&lang=ja&keyword=&useSynonym=1&vendor=&product=&datePublicFromYear={}&datePublicFromMonth={}&datePublicToYear={}&datePublicToMonth={}&dateLastPublishedFromMonth=&dateLastPublishedFromYear=&dateLastPublishedToMonth=&dateLastPublishedToYear=&cwe=&searchProductId=&pageNo={}'
     # 起止日期, 每次的搜索结果不能超过10000条
-    from_year = "2021"
-    from_month = "01"
-    to_year = "2021"
+    from_year = "2020"
+    from_month = "07"
+    to_year = "2020"
     to_month = "10"
     page = 1
     count = 0
     url = search_base.format(from_year,from_month,to_year,to_month,page)
     # 访问被禁止后，更换代理
     try:
-        res = requests.get(url, headers=headers, proxies={"http": "http://{}".format(proxy)}, timeout = 3)
-    except Exception as e:
-        print(e)
-        print("第{}次更换代理...".format(count))
-        count += 1
+        res = get(url,proxy,headers)
+    except:
+        random_sleep()
+        print('更换代理...')
         proxy = get_proxy().get("proxy")
-        res = requests.get(url, headers=headers, proxies={"http": "http://{}".format(proxy)},timeout=3)
+        res = get(url,proxy,headers)
+    # res = requests.get(url, headers=headers)
     # 指定编码方式(日文),否则会出现乱码
     res.encoding = 'SHIFT_JIS'
     soup = BeautifulSoup(res.text, features="lxml")
@@ -46,18 +47,13 @@ def get_urls():
     else:
         pages = total / 100 + 1
     print(total)
-
+    page = 50
     while page <= pages:
+        urls = []
         url = search_base.format(from_year, from_month, to_year, to_month, page)
-        print(url)
-        try:
-            res = requests.get(url, headers=headers, proxies={"http": "http://{}".format(proxy)}, timeout=3)
-        except Exception as e:
-            print(e)
-            print("第{}次更换代理...".format(count))
-            count += 1
-            proxy = get_proxy().get("proxy")
-            res = requests.get(url, headers=headers, proxies={"http": "http://{}".format(proxy)}, timeout=3)
+        # print(url)
+        print("--------------------正在爬取第{}页-------------------".format(page))
+        res = get(url,proxy,headers)
         # 指定编码方式(日文),否则会出现乱码
         res.encoding = 'SHIFT_JIS'
         soup = BeautifulSoup(res.text, features="lxml")
@@ -68,32 +64,50 @@ def get_urls():
             if len(td) > 0:
                 url = base + td[0].a['href']
                 urls.append(url)
-                jvn_id = td[0].a.string
-                print(url,jvn_id)
+                # jvn_id = td[0].a.string
+                # print(url,jvn_id)
         page += 1
+        count += 1
+        random_sleep()
+        parse(urls,43)
+        break
+        time.sleep(60)
     print(urls)
-# 遍历所有的 URL
 
-def parse(urls):
-    count = 1
+# 遍历所有的 URL
+def parse(urls,start):
+    urls = urls[start:]
+    count = start + 1
+    headers = {
+        'User-Agent': random.choice(user_agent_pc),
+        'Connection': 'close'
+    }
+    proxy = get_proxy().get("proxy")
     for url in urls:
-        print('正在抓取第{}个页面...'.format(count))
+        print(url)
+        print('正在抓取第{}个漏洞信息...'.format(count))
         jvn = {}
         jvn['url'] = url
-        try:
-            res = requests.get(url, headers=headers, proxies={"http": "http://{}".format(proxy)}, timeout=3)
-        except Exception as e:
-            print(e)
-            print("第{}次更换代理...".format(count))
-            count += 1
+        requests.adapters.DEFAULT_RETRIES = 5
+        # 十次更换一次代理和请求头
+        if count % 10 == 0:
+            headers = {
+                'User-Agent': random.choice(user_agent_pc),
+                'Connection': 'close'
+            }
             proxy = get_proxy().get("proxy")
-            res = requests.get(url, headers=headers, proxies={"http": "http://{}".format(proxy)},timeout=3)
+        try:
+            res = get(url,proxy,headers)
+        except Exception:
+            print('出错啦!!!')
         # 指定编码方式(日文),否则会出现乱码
         res.encoding = 'SHIFT_JIS'
         soup = BeautifulSoup(res.text, features="lxml")
         table = soup.find('table', class_='vuln_table_clase')
         rows = table.find_all('tr')
         '''注意：不同页面按行取值的方式可不可行？'''
+        if rows[0].text.replace('\n','') == '[English]':
+            rows = rows[1:]
         jvn['jvn_id'] = rows[0].text.replace('\n','')
         jvn['title'] = rows[1].text.replace('\n','').replace('\xa0',' ')
         jvn['abstract'] = rows[3].text.replace('\n','')
@@ -127,15 +141,25 @@ def parse(urls):
         jvn['register_date'] = rows2[2].find_all('td')[1].text
         # 上次更新
         jvn['updated_date'] = rows2[3].find_all('td')[1].text
-        print(jvn)
-        count += 1
         # 插入vuln.jvndb集合中
         coll = connect_jvndb()
         coll.insert_one(jvn)
-        time.sleep(1)
+        # time.sleep(1)
+        count += 1
+        random_sleep()
+        if count % 100 == 0:
+            time.sleep(60)
+
+def hello(url):
+    res = requests.get(url)
+    res.encoding = 'SHIFT_JIS'
+    soup = BeautifulSoup(res.text, features="lxml")
+    table = soup.find('table', class_='vuln_table_clase')
+    print(table)
 
 
 if __name__ == '__main__':
 
     get_urls()
-    parse(urls)
+    # parse(urls)
+    # hello('https://jvndb.jvn.jp//ja/contents/2021/JVNDB-2021-002345.html')

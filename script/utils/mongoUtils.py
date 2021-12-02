@@ -69,6 +69,16 @@ def connect_iot():
     connection = connect_vuln().iot
     return connection
 
+# 连接 iot2 (collection)
+def connect_iot2():
+    connection = connect_vuln().iot2
+    return connection
+
+# 连接 jvndb2 (collection)
+def connect_jvndb2():
+    connection = connect_vuln().jvndb2
+    return connection
+
 
 '''从cve中抽取出有用字段存入tfiot'''
 def convert1():
