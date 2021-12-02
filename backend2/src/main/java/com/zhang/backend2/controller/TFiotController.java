@@ -1,5 +1,6 @@
 package com.zhang.backend2.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zhang.backend2.dao.mongo.SubmitDao;
 import com.zhang.backend2.dao.mongo.TFiotDao;
 import com.zhang.backend2.model.domain.SubmitVuln;
@@ -52,6 +53,18 @@ public class TFiotController {
         }
     }
 
+    @GetMapping("search2")
+    public String search(String cveID, String severity, String attack, String type, String description, Integer size, Integer page) {
+        System.out.println("CVE-ID" + cveID);
+        System.out.println("severity" + severity);
+        System.out.println("attack" + attack);
+        System.out.println("desciption" + description);
+        System.out.println("pageSize" + page);
+        System.out.println("pageNum" + page);
+        return iotDao.findByMulti(cveID, severity, attack, type, description, size, page);
+    }
+
+
     @PostMapping("submit")
     public String submitVuln(@RequestBody SubmitVuln vuln) {
         try {
@@ -67,5 +80,25 @@ public class TFiotController {
     public TFiot test() {
         Map<String,String> map = new HashMap<>();
         return iotDao.getVulnByCVE("CVE-2021-41392");
+    }
+
+    @GetMapping("list/{size}/{page}")
+    public List<TFiot> list(@PathVariable("size") Integer size, @PathVariable("page") Integer page) {
+        return iotDao.getAllVuln(size, page);
+    }
+
+    @GetMapping("get/count")
+    public Long getTotal() {
+        return iotDao.getVulnNum();
+    }
+
+    @GetMapping("severity")
+    public String getPieData() {
+        JSONObject json = new JSONObject();
+        json.put("超危", iotDao.getCriticalNum());
+        json.put("高危", iotDao.getHighNum());
+        json.put("中危", iotDao.getMediumNum());
+        json.put("低危", iotDao.getLowNum());
+        return json.toJSONString();
     }
 }

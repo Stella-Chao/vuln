@@ -22,8 +22,13 @@ public class TFiotDao {
     }
 
     //查询集合里的所有文档
-    public List<TFiot> getAllVuln() {
-        return mongoTemplate.findAll(TFiot.class);
+    public List<TFiot> getAllVuln(Integer size, Integer page) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").exists(true));
+
+//        System.out.println("查询总数: " + total);
+        query.skip((page - 1) * size).limit(size);
+        return mongoTemplate.find(query, TFiot.class);
     }
 
     //通过CVE-ID查询
@@ -36,31 +41,35 @@ public class TFiotDao {
     //统计漏洞总数量
     public Long getVulnNum() {
         Query query = new Query();
-        return mongoTemplate.count(query,TFiot.class);
+        query.addCriteria(Criteria.where("_id").exists(true));
+        Long total = mongoTemplate.count(query,TFiot.class);
+        System.out.println("漏洞总数：" + total);
+        return total;
     }
 
-    /* 先只按 cvssV2 来统计*/
 
     //统计超危漏洞数量
     public Long getCriticalNum() {
-        return null;
+        Query query = new Query();
+        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("超危"));
+        return mongoTemplate.count(query,TFiot.class);
     }
     //统计高危漏洞数量
     public Long getHighNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("高危"));
+        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("高危"));
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计中危漏洞数量
     public Long getMediumNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("中危"));
+        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("中危"));
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计低危漏洞数量
     public Long getLowNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("低危"));
+        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("低危"));
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计高危漏洞
@@ -146,13 +155,32 @@ public class TFiotDao {
     }
 
     //多条件查询
-    public List<TFiot> findByMulti(String severity, String description) {
+    public String findByMulti(String cveID, String severity, String attack, String type, String description, Integer size, Integer page) {
         Query query = new Query();
+        JSONObject json = new JSONObject();
         Pattern pattern=Pattern.compile(".*?" + description + ".*", Pattern.CASE_INSENSITIVE);
         System.out.println(pattern);
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is(severity));
-        query.addCriteria(Criteria.where("description").regex(pattern));
-        return mongoTemplate.find(query,TFiot.class);
+        if (!cveID.equals("")) {
+            query.addCriteria(Criteria.where("CVE-ID").is(cveID));
+        }
+        if (!severity.equals("undefined")) {
+            query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is(severity));
+        }
+        if (!attack.equals("undefined")) {
+            query.addCriteria(Criteria.where("baseMetricV3.cvssV3.attackVector").is(attack));
+        }
+        if (!type.equals("undefined")) {
+            query.addCriteria(Criteria.where("Type01").is(type));
+        }
+        if (!description.equals("")) {
+            query.addCriteria(Criteria.where("description").regex(pattern));
+        }
+        System.out.println(query);
+        Long total = mongoTemplate.count(query, TFiot.class);
+        query.skip((page - 1) * size).limit(size);
+        json.put("total", total);
+        json.put("result", mongoTemplate.find(query,TFiot.class));
+        return json.toJSONString();
     }
 
     //模糊查询漏洞描述信息

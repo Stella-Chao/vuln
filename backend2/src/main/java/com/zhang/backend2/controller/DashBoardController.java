@@ -22,6 +22,7 @@ public class DashBoardController {
     public String getScreenData01() {
         JSONObject dashboard = new JSONObject();
         dashboard.put("漏洞总数量",iotDao.getVulnNum());
+        dashboard.put("超危漏洞",iotDao.getCriticalNum());
         dashboard.put("高危漏洞",iotDao.getHighNum());
         dashboard.put("中危漏洞",iotDao.getMediumNum());
         dashboard.put("低危漏洞",iotDao.getLowNum());
