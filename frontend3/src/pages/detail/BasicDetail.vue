@@ -1,5 +1,8 @@
 <template>
     <page-layout title="漏洞详情">
+      <a-card>
+        <Graph :vuln="vuln"/>
+      </a-card>
       <a-card :bordered="false">
         <detail-list title="漏洞详情">
           <detail-list-item term="CVE-ID"> {{ vuln["cveID"] }}</detail-list-item>
@@ -69,6 +72,7 @@
 <script>
 import DetailList from '../../components/tool/DetailList'
 import PageLayout from '../../layouts/PageLayout'
+import Graph from '../kg/Graph'
 import axios from 'axios'
 const base_url = process.env.VUE_APP_API_BASE_URL
 const DetailListItem = DetailList.Item
@@ -133,7 +137,7 @@ const vuln = {
 
 export default {
   name: 'BasicDetail',
-  components: {PageLayout, DetailListItem, DetailList},
+  components: {PageLayout, DetailListItem, DetailList, Graph},
   data () {
     return {
       base_url: base_url,
