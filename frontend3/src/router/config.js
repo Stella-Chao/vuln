@@ -11,6 +11,11 @@ const options = {
       component: () => import('@/pages/login')
     },
     {
+      path: 'register',
+      name: '注册页',
+      component: () => import('@/pages/register/Register')
+    },
+    {
       path: '*',
       name: '404',
       component: () => import('@/pages/exception/404'),
@@ -34,23 +39,6 @@ const options = {
           },
           // component: BlankView,
           component: () => import('@/pages/dashboard/analysis'),
-          // children: [
-          //   // {
-          //   //   path: 'workplace',
-          //   //   name: '工作台',
-          //   //   meta: {
-          //   //     page: {
-          //   //       closable: false
-          //   //     }
-          //   //   },
-          //   //   component: () => import('@/pages/dashboard/workplace'),
-          //   // },
-          //   {
-          //     path: 'analysis',
-          //     name: '分析页',
-          //     component: () => import('@/pages/dashboard/analysis'),
-          //   }
-          // ]
         },
         {
           path: 'form',
@@ -63,23 +51,6 @@ const options = {
           },
           // component: PageView,
           component: () => import('@/pages/form/basic'),
-          // children: [
-          //   {
-          //     path: 'basic',
-          //     name: '提交页面',
-          //     component: () => import('@/pages/form/basic'),
-          //   },
-          //   // {
-          //   //   path: 'step',
-          //   //   name: '分步表单',
-          //   //   component: () => import('@/pages/form/step'),
-          //   // },
-          //   // {
-          //   //   path: 'advance',
-          //   //   name: '高级表单',
-          //   //   component: () => import('@/pages/form/advance'),
-          //   // }
-          // ]
         },
         {
           path: 'list',
@@ -89,63 +60,13 @@ const options = {
           },
           // component: PageView,
           component: () => import('@/pages/list/QueryList'),
-          // children: [
-          //   {
-          //     path: 'query',
-          //     name: '查询表格',
-          //     meta: {
-          //       authority: 'queryForm',
-          //     },
-          //     component: () => import('@/pages/list/QueryList'),
-          //   },
-          //   // {
-          //   //   path: 'query/detail/:id',
-          //   //   name: '查询详情',
-          //   //   meta: {
-          //   //     highlight: '/list/query',
-          //   //     invisible: true
-          //   //   },
-          //   //   component: () => import('@/pages/Demo')
-          //   // },
-          //   // {
-          //   //   path: 'primary',
-          //   //   name: '标准列表',
-          //   //   component: () => import('@/pages/list/StandardList'),
-          //   // },
-          //   // {
-          //   //   path: 'card',
-          //   //   name: '卡片列表',
-          //   //   component: () => import('@/pages/list/CardList'),
-          //   // },
-          //   // {
-          //   //   path: 'search',
-          //   //   name: '搜索列表',
-          //   //   component: () => import('@/pages/list/search/SearchLayout'),
-          //   //   children: [
-          //   //     {
-          //   //       path: 'article',
-          //   //       name: '文章',
-          //   //       component: () => import('@/pages/list/search/ArticleList'),
-          //   //     },
-          //   //     {
-          //   //       path: 'application',
-          //   //       name: '应用',
-          //   //       component: () => import('@/pages/list/search/ApplicationList'),
-          //   //     },
-          //   //     {
-          //   //       path: 'project',
-          //   //       name: '项目',
-          //   //       component: () => import('@/pages/list/search/ProjectList'),
-          //   //     }
-          //   //   ]
-          //   // }
-          // ]
         },
         {
           path: 'details',
           name: '漏洞详情',
           meta: {
-            icon: 'profile'
+            icon: 'profile',
+            invisible: true
           },
           component: BlankView,
           children: [
@@ -159,11 +80,6 @@ const options = {
               name: '编辑页',
               component: () => import('@/pages/detail/Edit')
             }
-            // {
-            //   path: 'advance',
-            //   name: '高级详情页',
-            //   component: () => import('@/pages/detail/AdvancedDetail')
-            // }
           ]
         },
         {
@@ -187,6 +103,25 @@ const options = {
           meta: {
             icon: 'profile'
           }
+        }
+      ]
+    },
+    {
+      path: '/account',
+      name: '个人页',
+      component: TabsView,
+      meta: {
+      },
+      children: [
+        {
+          path: '/account/center',
+          name: '个人中心',
+          component: () => import('@/pages/account/center/index')
+        },
+        {
+          path: '/settings',
+          name: '个人设置',
+          // component: () => import('@pages/account/settings')
         }
       ]
     },

@@ -68,7 +68,7 @@ module.exports = {
     // Ignore all locale files of moment.js
     config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
     // 生产环境下将资源压缩成gzip格式
-    if (isProd) {
+    if (true) {
       // add `CompressionWebpack` plugin to webpack plugins
       config.plugins.push(new CompressionWebpackPlugin({
         algorithm: 'gzip',

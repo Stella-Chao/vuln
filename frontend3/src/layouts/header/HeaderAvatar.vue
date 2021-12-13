@@ -5,11 +5,11 @@
       <span class="name">{{user.name}}</span>
     </div>
     <a-menu :class="['avatar-menu']" slot="overlay">
-      <a-menu-item>
+      <a-menu-item @click="center">
         <a-icon type="user" />
         <span>个人中心</span>
       </a-menu-item>
-      <a-menu-item>
+      <a-menu-item @click="settings">
         <a-icon type="setting" />
         <span>设置</span>
       </a-menu-item>
@@ -35,6 +35,12 @@ export default {
     logout() {
       logout()
       this.$router.push('/login')
+    },
+    center() {
+      this.$router.push('/account/center')
+    },
+    settings() {
+      this.$router.push('/settings')
     }
   }
 }

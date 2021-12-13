@@ -9,15 +9,16 @@ const user = Mock.mock({
 })
 Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
   let result = {data: {}}
-  const {name, password} = JSON.parse(body)
-
+  console.log(body)
+  const {code, roles} = JSON.parse(body)['name']
+  console.log(code, roles)
   let success = false
 
-  if (name === 'admin' && password === '888888') {
+  if (code === 'OK' && roles === 'admin') {
     success = true
     result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit']}]
     result.data.roles = [{id: 'admin', operation: ['add', 'edit', 'delete']}]
-  } else if (name === 'test' || password === '888888') {
+  } else if (code === 'OK' && roles === 'User') {
     success = true
     result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit']}]
     result.data.roles = [{id: 'test', operation: ['add', 'edit', 'delete']}]
@@ -33,7 +34,7 @@ Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
     result.data.expireAt = new Date(new Date().getTime() + 30 * 60 * 1000)
   } else {
     result.code = -1
-    result.message = '账户名或密码错误（admin/888888 or test/888888）'
+    result.message = '账户名或密码错误'
   }
   return result
 })

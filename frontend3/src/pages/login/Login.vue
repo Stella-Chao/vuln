@@ -17,8 +17,8 @@
               <a-input
                 autocomplete="autocomplete"
                 size="large"
-                placeholder="admin"
-                v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
+                placeholder="用户名"
+                v-decorator="['username', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
               >
                 <a-icon slot="prefix" type="user" />
               </a-input>
@@ -26,7 +26,7 @@
             <a-form-item>
               <a-input
                 size="large"
-                placeholder="888888"
+                placeholder="密码"
                 autocomplete="autocomplete"
                 type="password"
                 v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
@@ -67,7 +67,7 @@
           <a-icon class="icon" type="alipay-circle" />
           <a-icon class="icon" type="taobao-circle" />
           <a-icon class="icon" type="weibo-circle" />
-          <router-link style="float: right" to="/dashboard/workplace" >注册账户</router-link>
+          <router-link style="float: right" to="register" >注册账户</router-link>
         </div>
       </a-form>
     </div>
@@ -80,6 +80,9 @@ import {login, getRoutesConfig} from '@/services/user'
 import {setAuthorization} from '@/utils/request'
 import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
+import axios from 'axios'
+
+const base_url = process.env.VUE_APP_API_BASE_URL
 
 export default {
   name: 'Login',
@@ -88,7 +91,8 @@ export default {
     return {
       logging: false,
       error: '',
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      base_url: base_url
     }
   },
   computed: {
@@ -103,9 +107,15 @@ export default {
       this.form.validateFields((err) => {
         if (!err) {
           this.logging = true
-          const name = this.form.getFieldValue('name')
-          const password = this.form.getFieldValue('password')
-          login(name, password).then(this.afterLogin)
+          let data = {}
+          data['username'] = this.form.getFieldValue('username')
+          data['password'] = this.form.getFieldValue('password')
+          console.log(data)
+          axios.post(this.base_url + 'user/signin', data)
+            .then(res => {
+              console.log("res:",res)
+              login(res.data).then(this.afterLogin)
+            })
         }
       })
     },
