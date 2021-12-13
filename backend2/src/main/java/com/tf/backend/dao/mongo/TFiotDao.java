@@ -1,8 +1,8 @@
-package com.zhang.backend2.dao.mongo;
+package com.tf.backend.dao.mongo;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zhang.backend2.model.domain.TFiot;
-import com.zhang.backend2.util.dateUtil;
+import com.tf.backend.utils.dateUtil;
+import com.tf.backend.model.domain.TFiot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

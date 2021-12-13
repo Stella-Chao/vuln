@@ -1,12 +1,11 @@
-package com.zhang.backend2.service.impl;
+package com.tf.backend.service.impl;
 
-import com.zhang.backend2.dao.NvdMapper;
-import com.zhang.backend2.model.domain.Nvd;
-import com.zhang.backend2.service.NvdService;
+import com.tf.backend.dao.NvdMapper;
+import com.tf.backend.model.domain.Nvd;
+import com.tf.backend.service.NvdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service

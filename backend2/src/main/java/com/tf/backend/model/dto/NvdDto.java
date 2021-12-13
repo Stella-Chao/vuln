@@ -1,4 +1,4 @@
-package com.zhang.backend2.model.dto;
+package com.tf.backend.model.dto;
 
 public class NvdDto {
 }

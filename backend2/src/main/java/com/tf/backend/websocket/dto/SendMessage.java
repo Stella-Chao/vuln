@@ -1,4 +1,4 @@
-package com.zhang.backend2.websocket.dto;
+package com.tf.backend.websocket.dto;
 
 import lombok.Data;
 

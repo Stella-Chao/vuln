@@ -1,4 +1,4 @@
-package com.zhang.backend2.config;
+package com.tf.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

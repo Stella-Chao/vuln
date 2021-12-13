@@ -1,4 +1,4 @@
-package com.zhang.backend2.model.domain;
+package com.tf.backend.model.domain;
 
 import lombok.Data;
 

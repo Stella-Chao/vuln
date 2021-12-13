@@ -1,7 +1,6 @@
-package com.zhang.backend2.service;
+package com.tf.backend.service;
 
-import com.zhang.backend2.model.domain.Nvd;
-import org.springframework.stereotype.Service;
+import com.tf.backend.model.domain.Nvd;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package com.zhang.backend2.controller;
+package com.tf.backend.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zhang.backend2.dao.mongo.TFiotDao;
+import com.tf.backend.dao.mongo.TFiotDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

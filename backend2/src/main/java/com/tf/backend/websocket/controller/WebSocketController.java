@@ -1,6 +1,6 @@
-package com.zhang.backend2.websocket.controller;
+package com.tf.backend.websocket.controller;
 
-import com.zhang.backend2.websocket.dto.SendMessage;
+import com.tf.backend.websocket.dto.SendMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;

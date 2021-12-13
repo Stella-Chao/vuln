@@ -1,7 +1,7 @@
-package com.zhang.backend2.controller;
+package com.tf.backend.controller;
 
-import com.zhang.backend2.model.domain.Nvd;
-import com.zhang.backend2.service.NvdService;
+import com.tf.backend.model.domain.Nvd;
+import com.tf.backend.service.NvdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.zhang.backend2.websocket.config;
+package com.tf.backend.websocket.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

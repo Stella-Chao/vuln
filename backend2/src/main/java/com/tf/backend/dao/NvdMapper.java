@@ -1,7 +1,6 @@
-package com.zhang.backend2.dao;
+package com.tf.backend.dao;
 
-import com.zhang.backend2.model.domain.Nvd;
-import org.apache.ibatis.annotations.Mapper;
+import com.tf.backend.model.domain.Nvd;
 
 import java.util.List;
 
