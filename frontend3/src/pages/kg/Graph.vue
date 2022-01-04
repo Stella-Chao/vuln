@@ -8,6 +8,8 @@
 <script>
 import * as echarts from "echarts/lib/echarts";
 import "echarts/lib/chart/graph";
+import { TitleComponent } from 'echarts/components';
+echarts.use([TitleComponent]);
 
 export default {
   name: "Graph",
@@ -20,7 +22,7 @@ export default {
       categoryData: [],
       options: {
         title: {
-          text: "知识图谱示例"
+          text: "漏洞图谱"
         },
         series: [
           {

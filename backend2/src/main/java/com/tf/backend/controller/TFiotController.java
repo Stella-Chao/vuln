@@ -8,10 +8,7 @@ import com.tf.backend.model.domain.TFiot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("tf")
@@ -66,7 +63,17 @@ public class TFiotController {
 
 
     @PostMapping("submit")
-    public String submitVuln(@RequestBody SubmitVuln vuln) {
+    public String submitVuln(@RequestBody JSONObject param) {
+        System.out.println(param);
+        SubmitVuln vuln = new SubmitVuln();
+        vuln.setTitle(param.get("title").toString());
+        vuln.setDate(new Date());
+        vuln.setAddress(param.get("address").toString());
+        vuln.setAttacker(param.get("attacker").toString());
+        vuln.setVentor(param.get("vendor").toString());
+        vuln.setProduct(param.get("product").toString());
+        vuln.setType(param.get("type").toString());
+        vuln.setDescription(param.get("description").toString());
         try {
             subDao.insert(vuln);
             return "success";

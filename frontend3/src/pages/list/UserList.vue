@@ -6,95 +6,44 @@
           <a-row v-if="advanced">
           <a-col :md="16" :sm="24" >
             <a-form-item
-              label="内容/标题"
+              label="用户名"
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-input v-model="descri" placeholder="请输入"/>
+              <a-input v-model="username" placeholder="请输入"/>
             </a-form-item>
           </a-col>
         </a-row>
           <a-row >
           <a-col :md="16" :sm="24" >
             <a-form-item
-              label="漏洞编号"
+              label="手机号"
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-input v-model="cveid" placeholder="请输入" />
+              <a-input v-model="phone" placeholder="请输入" />
             </a-form-item>
           </a-col>
         </a-row>
           <a-row v-if="advanced">
           <a-col :md="16" :sm="24" >
             <a-form-item
-              label="危险级别"
+              label="邮箱地址"
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-select v-model="severity" placeholder="请选择">
-                <a-select-option value="超危">超危</a-select-option>
-                <a-select-option value="高危">高危</a-select-option>
-                <a-select-option value="中危">中危</a-select-option>
-                <a-select-option value="低危">低危</a-select-option>
-              </a-select>
+              <a-input v-model="email" placeholder="请输入"/>
             </a-form-item>
           </a-col>
           </a-row>
           <a-row v-if="advanced">
           <a-col :md="16" :sm="24" >
             <a-form-item
-              label="攻击向量"
+              label="公司名称"
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-select v-model="attack" placeholder="请选择">
-                <a-select-option value="网络">网络</a-select-option>
-                <a-select-option value="邻接">邻接</a-select-option>
-                <a-select-option value="本地">本地</a-select-option>
-                <a-select-option value="物理">物理</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row v-if="advanced">
-          <a-col :md="16" :sm="24" >
-            <a-form-item
-              label="漏洞类型"
-              :labelCol="{span: 5}"
-              :wrapperCol="{span: 18, offset: 1}"
-            >
-              <a-select v-model="type" placeholder="请选择">
-                <a-select-option value="拒绝服务">拒绝服务</a-select-option>
-                <a-select-option value="执行代码">执行代码</a-select-option>
-                <a-select-option value="绕过">绕过</a-select-option>
-                <a-select-option value="获取权限">获取权限</a-select-option>
-                <a-select-option value="目录遍历">目录遍历</a-select-option>
-                <a-select-option value="跨站脚本">跨站脚本</a-select-option>
-                <a-select-option value="获取信息">获取信息</a-select-option>
-                <a-select-option value="溢出">溢出</a-select-option>
-                <a-select-option value="SQL注入">SQL注入</a-select-option>
-                <a-select-option value="内存错误">内存错误</a-select-option>
-                <a-select-option value="文件包含">文件包含</a-select-option>
-                <a-select-option value="跨站请求伪造">跨站请求伪造</a-select-option>
-                <a-select-option value="HTTP响应拆分">HTTP响应拆分</a-select-option>
-                <a-select-option value="其他">其他</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row v-if="advanced">
-          <a-col :md="16" :sm="24" >
-            <a-form-item
-              label="产品厂商"
-              :labelCol="{span: 5}"
-              :wrapperCol="{span: 18, offset: 1}"
-            >
-              <a-select v-model="ventor" placeholder="请选择">
-                <a-select-option value="Cisco">思科</a-select-option>
-                <a-select-option value="Hikvision">海康威视</a-select-option>
-                <a-select-option value="Dahua">大华</a-select-option>
-              </a-select>
+              <a-input v-model="company" placeholder="请输入"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -116,16 +65,16 @@
         </div>
         <div slot="action" slot-scope="{record}">
           
-          <router-link :to="{name:'编辑页',query:{id:record.cveID}}" >
+          <!-- <router-link :to="{name:'编辑页',query:{id:record.cveID}}" >
             <a style="margin-right: 8px">
               <a-icon type="edit"/>编辑
             </a>
-          </router-link>
-          <!-- <a @click="deleteRecord(record.key)" v-auth="`delete`">
+          </router-link> -->
+          <a @click="deleteRecord(record.phone)">
             <a-icon type="delete" />删除
-          </a> -->
+          </a>
           <!-- <router-link :to="`/list/query/detail/${record.key}`" >详情</router-link> -->
-          <router-link :to="{name:'基础详情页',query:{id:record.cveID}}" >详情</router-link>
+          <!-- <router-link :to="{name:'基础详情页',query:{id:record.cveID}}" >详情</router-link> -->
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle" />
@@ -143,30 +92,25 @@ import axios from 'axios'
 const base_url = process.env.VUE_APP_API_BASE_URL
 const columns = [
   {
-    title: 'CVE-ID',
-    dataIndex: 'cveID'
+    title: '用户名',
+    dataIndex: 'username'
   },
   {
-    title: '漏洞名称',
-    dataIndex: 'title',
-    width: 500
+    title: '手机号',
+    dataIndex: 'phone',
+    // width: 500
   },
   {
-    title: '漏洞类型',
-    dataIndex: 'type01[0]',
+    title: '邮箱地址',
+    dataIndex: 'email',
     // scopedSlots: { customRender: 'description' }
   },
   {
-    title: '危险级别',
-    dataIndex: "cvssV3['cvssV3']['baseSeverity']",
+    title: '公司名称',
+    dataIndex: 'company',
     needTotal: true,
     // slots: {title: 'statusTitle'},
-    scopedSlots: { customRender: 'tags' }
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'lastModifiedDate',
-    sorter: true
+    // scopedSlots: { customRender: 'tags' }
   },
   {
     title: '操作',
@@ -178,20 +122,17 @@ const dataSource = []
 
 
 export default {
-  name: 'QueryList',
+  name: 'UserList',
   components: {StandardTable},
   data () {
     return {
       advanced: true,
       columns: columns,
       dataSource: dataSource,
-      cveid: "",
-      severity: undefined,
-      descri: "",
-      ventor: undefined,
-      attack: undefined,
-      type: undefined,
-      url: "",
+      username: "",
+      phone: "",
+      email: "",
+      company: "",
       pagination:{
         defaultPageSize:20,
         showTotal: total => `共${total}条记录`,
@@ -207,9 +148,9 @@ export default {
       },
     }
   },
-  authorize: {
-    deleteRecord: 'delete'
-  },
+  // authorize: {
+  //   deleteRecord: 'delete'
+  // },
   created() {
     console.log(base_url)
     this.getData()
@@ -218,11 +159,11 @@ export default {
 
   methods: {
     getData() {
-        axios.get(base_url + '/tf/get/count').then(res=>{
-          console.log('漏洞总数量：',res.data)
+        axios.get(base_url + '/user/get/count').then(res=>{
+          console.log('用户数量：',res.data)
           this.pagination.total = res.data
         })
-        this.url = base_url + '/tf/list/'
+        this.url = base_url + '/user/list/'
         axios.get(this.url + this.pagination.defaultPageSize +'/1').then(res => {
           console.log(res.data)
           this.dataSource = res.data
@@ -258,17 +199,20 @@ export default {
       })
     },
     reset() {
-      this.cveid = ""
-      this.severity = undefined
-      this.descri = ""
-      this.attack = undefined
-      this.ventor = undefined
-      this.type = undefined
+      this.username = ""
+      this.phone = ""
+      this.email = ""
+      this.company = ""
       this.getData()
     },
     deleteRecord(key) {
-      this.dataSource = this.dataSource.filter(item => item.key !== key)
-      this.selectedRows = this.selectedRows.filter(item => item.key !== key)
+      console.log(key)
+      let param = {}
+      param["phone"] = key
+      axios.post(base_url + '/user/delete', param).then(res => {
+        console.log(res.data);
+        this.$message.success("删除成功！", 2);
+      })
     },
     toggleAdvanced () {
       this.advanced = !this.advanced

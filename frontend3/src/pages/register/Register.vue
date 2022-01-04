@@ -283,7 +283,7 @@ export default {
       data['email'] = this.form.getFieldValue('email')
       data['phone'] = this.form.getFieldValue('phone')
       console.log(JSON.stringify(data))
-      axios.post(this.base_url + 'user/signup',data)
+      axios.post(this.base_url + '/user/signup',data)
         .then(res => {
           console.log(res.data)
           this.$message.success("注册成功！", 3)

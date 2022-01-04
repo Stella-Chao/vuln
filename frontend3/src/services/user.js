@@ -9,7 +9,7 @@ import {request, METHOD, removeAuthorization} from '@/utils/request'
  */
 export async function login(name, password) {
   return request(LOGIN, METHOD.POST, {
-    name: name,
+    username: name,
     password: password
   })
 }

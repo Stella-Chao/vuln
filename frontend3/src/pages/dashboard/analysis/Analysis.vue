@@ -127,18 +127,18 @@
         <a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
       </div>
       <br/>
-      <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
-      <a-form-item label="Email">
-        <a-input
-          v-decorator="['Email', { rules: [{ required: true, message: '请输入邮箱地址' }] }]"
-        />
-      </a-form-item>
-      <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-      <a-button type="primary" html-type="submit">
-        订阅
-      </a-button>
-    </a-form-item>
-  </a-form>
+      <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" >
+          <a-form-item label="Email">
+            <a-input
+              v-decorator="['Email', { rules: [{ required: true, message: '请输入邮箱地址' }] }]"
+            />
+          </a-form-item>
+          <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+          <a-button type="primary" html-type="submit">
+            订阅
+          </a-button>
+        </a-form-item>
+      </a-form>
     </a-card>
   </div>
 </template>

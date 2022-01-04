@@ -36,7 +36,7 @@
         <a-input v-model="form.product" placeholder="受影响的产品(型号)"/>
       </a-form-model-item>
       <a-form-model-item label="产品厂商">
-        <a-input v-model="form.ventor" placeholder="受影响的产品厂商"/>
+        <a-input v-model="form.vendor" placeholder="受影响的产品厂商"/>
       </a-form-model-item>
       <a-form-model-item label="攻击途径">
         <a-select v-model="form.attacker" placeholder="请选择攻击途径">
@@ -58,7 +58,7 @@
         <a-input v-model="form.address" placeholder="电话/邮箱"/>
       </a-form-model-item>
       <a-form-item style="margin-top: 24px" :wrapperCol="{span: 10, offset: 7}">
-        <a-button style="margin-left: 50px" type="primary" @click="save"> 提交 </a-button>
+        <a-button style="margin-left: 50px" type="primary" @click="submit"> 提交 </a-button>
         <a-button style="margin-left: 150px"> 保存 </a-button>
       </a-form-item>
     </a-form-model>
@@ -76,29 +76,34 @@ export default {
       wrapperCol: { span: 14 },
       form: {
         title: '',
-        date: undefined,
-        type: undefined,
-        ventor: '',
+        date: '',
+        type: '',
+        vendor: '',
         product: '',
         description: '',
-        attacker: undefined,
+        attacker: '',
         address: '',
-        desc: '',
       },
     }
   },
-  computed: {
-    desc() {
-      return "漏洞上报用于向漏洞发现者收集或验证信息"
-    }
-  },
   methods: {
-    save() {
-      axios.post(base_url + 'tf/submit/{}')
+    submit() {
+      console.log(this.form)
+      let data = {}
+      data['title'] = this.form['title']
+      data['date'] = this.form['date'] 
+      data['type'] = this.form['type']
+      data['product'] = this.form['product']
+      data['vendor'] = this.form['vendor']
+      data['description'] = this.form['description']
+      data['attacker'] = this.form['attacker']
+      data['address'] = this.form['address']
+      axios.post(base_url + '/tf/submit', data)
         .then(res=>{
-          console.log(res.data)
+          if(res.data === "success") {
+            this.$message.success("提交成功，天防安全欢迎你！", 3)
+          }
         })
-      
     }
   }
 }

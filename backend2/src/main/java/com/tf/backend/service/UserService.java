@@ -1,5 +1,6 @@
 package com.tf.backend.service;
 
+import com.tf.backend.model.domain.TFiot;
 import com.tf.backend.model.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zhanghe
@@ -21,12 +23,22 @@ public class UserService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * 通过用户名查找用户
+     * @param username
+     * @return
+     */
     public User getUserByName(String username) {
         Query query = new Query();
         query.addCriteria(Criteria.where("username").is(username));
         return mongoTemplate.findOne(query, User.class);
     }
 
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
     public User add(User user) {
 //        SimpleDateFormat sf = new SimpleDateFormat();
 //        sf.applyPattern("yyyy-MM-dd HH:mm:ss");
@@ -35,6 +47,11 @@ public class UserService {
         return mongoTemplate.save(user);
     }
 
+    /**
+     * 更新用户
+     * @param user
+     * @return
+     */
     public User update(User user) {
         Query query = new Query();
         query.addCriteria(Criteria.where("username").is(user.getUsername()));
@@ -49,9 +66,49 @@ public class UserService {
         return mongoTemplate.findAndModify(query, update, User.class);
     }
 
-    public void delete(String username) {
+    /**
+     * 通过用户名删除用户
+     * @param username
+     */
+    public void deleteByName(String username) {
         Query query = new Query();
         query.addCriteria(Criteria.where("username").is(username));
         mongoTemplate.findAndRemove(query, User.class);
+    }
+
+    /**
+     * 通过手机号删除用户
+     * @param phone
+     */
+    public void deleteByPhone(String phone) {
+        Query query = new Query();
+        System.out.println("正在删除用户：" + phone);
+        query.addCriteria(Criteria.where("phone").is(phone));
+        mongoTemplate.findAndRemove(query, User.class);
+    }
+
+    /**
+     * 统计用户数量
+     * @return
+     */
+    public Long getUserNum() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").exists(true));
+        Long total = mongoTemplate.count(query, User.class);
+        System.out.println("用户总数：" + total);
+        return total;
+    }
+
+    /**
+     * 查询所有用户
+     * @param size
+     * @param page
+     * @return
+     */
+    public List<User> getAllUser(Integer size, Integer page) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").exists(true));
+        query.skip((page - 1) * size).limit(size);
+        return mongoTemplate.find(query, User.class);
     }
 }

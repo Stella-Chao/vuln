@@ -1,8 +1,5 @@
 <template>
     <page-layout title="漏洞详情">
-      <a-card>
-        <Graph :vuln="vuln"/>
-      </a-card>
       <a-card :bordered="false">
         <detail-list title="漏洞详情">
           <detail-list-item term="CVE-ID"> {{ vuln["cveID"] }}</detail-list-item>
@@ -43,6 +40,9 @@
           :pagination="true"
         >
         </a-table>
+        <a-card>
+          <Graph :vuln="vuln"/>
+        </a-card>
         <div class="title">
           <b>相关链接</b>
         </div>
@@ -156,7 +156,7 @@ export default {
   },
   methods: {
     getVulnDetail(id) {
-      axios.get(this.base_url + 'tf/cve?cveID=' + id)
+      axios.get(this.base_url + '/tf/cve?cveID=' + id)
         .then(res=>{
           this.vuln = res.data
           console.log(this.vuln)

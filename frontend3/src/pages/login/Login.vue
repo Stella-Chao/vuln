@@ -80,7 +80,7 @@ import {login, getRoutesConfig} from '@/services/user'
 import {setAuthorization} from '@/utils/request'
 import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 
 const base_url = process.env.VUE_APP_API_BASE_URL
 
@@ -111,19 +111,20 @@ export default {
           data['username'] = this.form.getFieldValue('username')
           data['password'] = this.form.getFieldValue('password')
           console.log(data)
-          axios.post(this.base_url + 'user/signin', data)
-            .then(res => {
-              console.log("res:",res)
-              login(res.data).then(this.afterLogin)
-            })
+          // axios.post(this.base_url + 'user/signin', data)
+          login(data['username'], data['password'])
+            .then(this.afterLogin)
         }
       })
     },
     afterLogin(res) {
+      console.log(res)
       this.logging = false
       const loginRes = res.data
       if (loginRes.code >= 0) {
         const {user, permissions, roles} = loginRes.data
+        console.log(loginRes.data)
+        console.log("afterLogin:" , user)
         this.setUser(user)
         this.setPermissions(permissions)
         this.setRoles(roles)

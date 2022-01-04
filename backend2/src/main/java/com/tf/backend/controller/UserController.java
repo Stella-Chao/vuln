@@ -2,6 +2,7 @@ package com.tf.backend.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tf.backend.model.domain.TFiot;
 import com.tf.backend.model.domain.User;
 import com.tf.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,6 +169,39 @@ public class UserController {
         user.setGender(param.get("gender").toString());
         userService.update(user);
         return "修改成功!";
+    }
+
+    /**
+     * 用户列表分页查询
+     * @param size
+     * @param page
+     * @return
+     */
+    @GetMapping("list/{size}/{page}")
+    public List<User> list(@PathVariable("size") Integer size, @PathVariable("page") Integer page) {
+        return userService.getAllUser(size, page);
+    }
+
+    /**
+     * 查询用户数量
+     * @return
+     */
+    @GetMapping("/get/count")
+    public Long getTotal() {
+        return userService.getUserNum();
+    }
+
+    /**
+     * 删除用户
+     * @param param
+     * @return
+     */
+    @PostMapping("/delete")
+    public String delete(@RequestBody JSONObject param) {
+        System.out.println(param);
+        String phone = param.get("phone").toString();
+        userService.deleteByPhone(phone);
+        return "删除成功！";
     }
 
 

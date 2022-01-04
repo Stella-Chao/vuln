@@ -95,7 +95,34 @@ const options = {
           meta: {
             icon: 'profile'
           },
-          component: () => import('@/pages/kg/Graph')
+          component: BlankView,
+          children: [
+            {
+              path: 'vedio',
+              name: '视频监控类'
+            },
+            {
+              path: 'mobile',
+              name: '移动设备类'
+            },
+            {
+              path: 'industry',
+              name: '工业控制类'
+            },
+            {
+              path: 'smart',
+              name: '智能家居类'
+            }
+          ]
+        },
+        {
+          path: 'userlist',
+          name: '用户管理',
+          meta: {
+            icon: 'table'
+          },
+          // component: PageView,
+          component: () => import('@/pages/list/UserList'),
         },
         {
           path: 'about',

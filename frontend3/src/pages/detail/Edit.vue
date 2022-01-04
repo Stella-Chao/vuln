@@ -3,13 +3,13 @@
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
         <div>漏洞详情</div>
         <a-form-model-item label="CVE-ID">
-        <a-input v-model="form.cveId" disabled/>
+        <a-input v-model="form.cveId"/>
         </a-form-model-item>
         <a-form-model-item label="漏洞名称">
         <a-input v-model="form.name"/>
         </a-form-model-item>
         <a-form-model-item label="CWE-ID">
-        <a-input v-model="form.cweID" disabled/>
+        <a-input v-model="form.cweID"/>
         </a-form-model-item>
         <a-form-model-item label="漏洞类型">
         <a-input v-model="form.type" />
@@ -20,19 +20,19 @@
         </a-form-model-item>
         <div>攻击详情</div>
         <a-form-model-item label="危险评分">
-        <a-input v-model="form.score" disabled/>
+        <a-input v-model="form.score"/>
         </a-form-model-item>
         <a-form-model-item label="危险级别">
-        <a-input v-model="form.severity" disabled/>
+        <a-input v-model="form.severity"/>
         </a-form-model-item>
         <a-form-model-item label="攻击复杂度">
-        <a-input v-model="form.complexity" disabled/>
+        <a-input v-model="form.complexity"/>
         </a-form-model-item>
         <a-form-model-item label="攻击方式">
-        <a-input v-model="form.attackVector" disabled/>
+        <a-input v-model="form.attackVector"/>
         </a-form-model-item>
         <a-form-model-item label="攻击向量">
-        <a-input v-model="form.vector" disabled/>
+        <a-input v-model="form.vector"/>
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click="onSubmit">
@@ -81,7 +81,7 @@ export default {
       console.log('submit!', this.form);
     },
     getVulnData(id) {
-        axios.get(this.base_url + 'tf/cve?cveID=' + id)
+        axios.get(this.base_url + '/tf/cve?cveID=' + id)
           .then(res=>{
             let result = res.data
             console.log(result)
