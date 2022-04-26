@@ -1,9 +1,12 @@
-from message import send
+import re
+
+from utils.message import send
 import datetime
-from sql import connect
-from cve import hardware_num, get_cpe_by_cveId, iot_num
-from qly_spider import spider
-from exploit_spider import exp_spider
+from utils.sql import connect
+from spider.cve import hardware_num, get_cpe_by_cveId, iot_num
+from spider.qly_spider import spider
+from spider.exploit_spider import exp_spider
+from utils.mongoUtils import get_train_data
 
 def test_message():
     '''情报订阅用户列表从数据库中获取'''
@@ -37,3 +40,7 @@ def test_time():
 
 def test_exp_spider():
     exp_spider()
+
+def test_get_train_data():
+    get_train_data()
+    re.sub()

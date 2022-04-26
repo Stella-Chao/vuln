@@ -2,10 +2,10 @@ import gc
 import re
 import time
 import requests
-from utils.mongoUtils import connect_nvd,connect_iot
+from utils.mongoUtils import connect_nvd, connect_nvd01, connect_iot
 
 def get_all_cve():
-    collection = connect_nvd()
+    collection = connect_nvd01()
     base_url = 'https://services.nvd.nist.gov/rest/json/cves/1.0?'
     index = 0
     total = 99999999
@@ -22,11 +22,11 @@ def get_all_cve():
         for item in results['result']['CVE_Items']:
             collection.insert_one(item)
         index += 2000
-        time.sleep(10)
+        time.sleep(20)
 
 
 # 统计CVE漏洞库中硬件平台上的漏洞数目
-def hardware_num():
+def test_hardware_num():
     collection = connect_nvd()
     h_count = 0
     print("漏洞总数: ", collection.count_documents({}))
@@ -37,6 +37,7 @@ def hardware_num():
             for cpe in node['cpe_match']:
                 # if (cpe['cpe23Uri'].find(':h:') != -1) & (description[0]['value'].find('device') != -1 or description[0]['value'].find('Device') != -1):  # 漏洞发生在硬件平台上
                 #     print(cpe['cpe23Uri'])
+                if (cpe['cpe23Uri'].find(':h:') != -1):
                     h_count += 1
                     flag = 1
                     break
@@ -118,11 +119,55 @@ def update_type02():
             # 更新类型2
             connection.update_one({"CVE-ID": item["CVE-ID"]}, {"$set": {"Type02": "vedio"}})
 
-# 统计缺少CPE的漏洞数目
+
+# 统计描述信息中含有含有Cisco 但不含iot/device的漏洞数
+def test_Cisco():
+    collection = connect_nvd()
+    print(collection)
+    i_num = 0
+    print("漏洞总数：", collection.count_documents({}))
+    for item in collection.find():
+        for description in item['cve']['description']['description_data']:
+            if description['value'].find('Cisco') != -1:
+                if check(description['value']) == False:
+                    i_num += 1
+                    print(description['value'])
+                    if len(item["configurations"]["nodes"]) > 0:
+                        nodes = item["configurations"]["nodes"][0]["cpe_match"]
+                    print(nodes)
+                    break
+    print(i_num)
+
+def check(des):
+    if (des.find('Device') == -1) & (des.find('device') == -1) & (des.find('IoT') == -1) & (des.find('iot') == -1)\
+            & (des.find('router') == -1) & (des.find('Router') == -1):
+        return False
+    else:
+        return True
+
+
+# 统计CVE漏洞库中有CPE的漏洞数量
+def test_cpe_num():
+    collection = connect_nvd01()
+    cpe_count = 0
+    print("漏洞总数: ", collection.count_documents({}))
+    for item in collection.find():
+        nodes = item['configurations']['nodes']
+        if len(nodes) > 0:
+            cpe = nodes[0]["cpe_match"]
+            if len(cpe) > 0:
+                cpe_count += 1
+    print("有CPE信息的漏洞数: ", cpe_count)
+
+def test_cve():
+    get_all_cve()
+
 if __name__ == '__main__':
-    # get_all_cve()
+    get_all_cve()
     # nvd2iot()
     # get_by_cveID("CVE-2021-34947")
     # update_type02()
-    hardware_num()
+    # hardware_num()
     # iot_num()
+    # cpe_num()
+    pass

@@ -14,6 +14,11 @@ def connect_nvd():
     collection = connect_vuln().nvd
     return collection
 
+# 连接 nvd01 (collection)
+def connect_nvd01():
+    collection = connect_vuln().nvd01
+    return collection
+
 # 连接 cnvd (collection)
 def connect_cnvd():
     collection = connect_vuln().cnvd
@@ -77,6 +82,11 @@ def connect_iot2():
 # 连接 jvndb2 (collection)
 def connect_jvndb2():
     connection = connect_vuln().jvndb2
+    return connection
+
+# 连接 device
+def connect_device():
+    connection = connect_vuln().device
     return connection
 
 
