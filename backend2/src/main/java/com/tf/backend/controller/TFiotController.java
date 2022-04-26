@@ -1,8 +1,8 @@
 package com.tf.backend.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tf.backend.dao.mongo.SubmitDao;
-import com.tf.backend.dao.mongo.TFiotDao;
+import com.tf.backend.repository.mongo.SubmitDao;
+import com.tf.backend.repository.mongo.TFiotDao;
 import com.tf.backend.model.domain.SubmitVuln;
 import com.tf.backend.model.domain.TFiot;
 import org.springframework.beans.factory.annotation.Autowired;

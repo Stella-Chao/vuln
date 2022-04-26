@@ -1,7 +1,7 @@
-package com.tf.backend.dao.mongo;
+package com.tf.backend.repository.mongo;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tf.backend.utils.dateUtil;
+import com.tf.backend.utils.DateUtil;
 import com.tf.backend.model.domain.TFiot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -21,7 +21,13 @@ public class TFiotDao {
         mongoTemplate.save(vuln);
     }
 
-    //查询集合里的所有文档
+    public List<TFiot> getAllVuln() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").exists(true));
+        return mongoTemplate.find(query, TFiot.class);
+    }
+
+    //查询集合里的所有文档 + 分页
     public List<TFiot> getAllVuln(Integer size, Integer page) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").exists(true));
@@ -97,21 +103,21 @@ public class TFiotDao {
     }
     //近一周新增数量
     public Long getWeekNum() {
-        String day = dateUtil.getDate("Week");
+        String day = DateUtil.getDate("Week");
         Query query = new Query();
         query.addCriteria(Criteria.where("publishedDate").gt(day));
         return mongoTemplate.count(query,TFiot.class);
     }
     //近一月新增数量
     public Long getMonthNum() {
-        String day = dateUtil.getDate("Month");
+        String day = DateUtil.getDate("Month");
         Query query = new Query();
         query.addCriteria(Criteria.where("publishedDate").gt(day));
         return mongoTemplate.count(query,TFiot.class);
     }
     //近一年新增数量
     public Long getYearNum() {
-        String day = dateUtil.getDate("Year");
+        String day = DateUtil.getDate("Year");
         Query query = new Query();
         query.addCriteria(Criteria.where("publishedDate").gt(day));
         return mongoTemplate.count(query,TFiot.class);
@@ -122,21 +128,21 @@ public class TFiotDao {
     }
     //近一周新增漏洞
     public List<TFiot> getWeekVuln() {
-        String day = dateUtil.getDate("Week");
+        String day = DateUtil.getDate("Week");
         Query query = new Query();
         query.addCriteria(Criteria.where("publishedDate").gt(day));
         return mongoTemplate.find(query,TFiot.class);
     }
     //近一月新增漏洞
     public List<TFiot> getMonthVuln() {
-        String day = dateUtil.getDate("Month");
+        String day = DateUtil.getDate("Month");
         Query query = new Query();
         query.addCriteria(Criteria.where("publishedDate").gt(day));
         return mongoTemplate.find(query,TFiot.class);
     }
     //近一年新增漏洞
     public List<TFiot> getYearVuln() {
-        String day = dateUtil.getDate("Year");
+        String day = DateUtil.getDate("Year");
         Query query = new Query();
         query.addCriteria(Criteria.where("publishedDate").gt(day));
         return mongoTemplate.find(query,TFiot.class);

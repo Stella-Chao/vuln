@@ -62,7 +62,7 @@ public class UserController {
             user.setUsername(username);
             user.setPassword(passwordEncoder.encode(password));
             user.setEmail(email);
-            user.setRole("User");
+            user.setRole("user");
             user.setCompany(company);
             user.setPhone(phone);
             user.setProfession(profession);
@@ -98,8 +98,14 @@ public class UserController {
             //返回值中添加 roles 信息
             List<HashMap<Object,Object>> roles = new ArrayList<>();
             HashMap<Object, Object> role = new HashMap<>();
-            role.put("id", "admin");
-            role.put("operation", new String[]{"add","edit","delete"});
+            if ("admin".equals(user.getRole())) {
+                role.put("id", "admin");
+                role.put("operation", new String[]{"add","edit"});
+            }
+            if ("user".equals(user.getRole())) {
+                role.put("id", "user");
+                role.put("operation", new String[]{"add","edit"});
+            }
             roles.add(role);
             res.put("code", 0);
             res.put("message", user.getUsername() + " 欢迎回来!");
