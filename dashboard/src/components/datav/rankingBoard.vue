@@ -18,6 +18,7 @@ export default {
   methods: {
     createData() {
       axios.get('http://127.0.0.1:9090/dashboard/data02')
+      // axios.get('http://172.16.0.37:9090/dashboard/data02')
         .then(res=>{
           console.log(res.data)
           this.result = JSON.parse(res.data['CVE类别'])
@@ -49,7 +50,7 @@ export default {
                 value: this.result['Overflow']
               },
               {
-                name: 'XSS',
+                name: '跨站脚本',
                 value: this.result['XSS']
               },
               {
@@ -57,7 +58,7 @@ export default {
                 value: this.result['绕过']
               },
               {
-                name: 'DoS',
+                name: '拒绝服务',
                 value: this.result['DoS']
               }
             ],

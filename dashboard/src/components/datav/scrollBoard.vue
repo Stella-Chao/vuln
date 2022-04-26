@@ -1,6 +1,6 @@
 <template>
   <div id="scroll-board">
-    <dv-scroll-board :config="config" />
+    <dv-scroll-board :config="config" @click="hover"/>
   </div>
 </template>
 
@@ -10,11 +10,12 @@ export default {
   name: 'ScrollBoard',
   data () {
     return {
+      // base_url: 'http://172.16.0.37:9090/dashboard/data03',
       base_url: 'http://127.0.0.1:9090/dashboard/data03',
       config: {
-        header: ['CVE-ID', '危险级别', '攻击类型', 'POC'],
+        header: ['CVE-ID', '漏洞名称', '危险级别', '攻击类型', 'POC'],
         data: [],
-        index: true,
+        index: false,
         columnWidth: [50],
         align: ['center'],
         rowNum: 7,
@@ -31,13 +32,14 @@ export default {
       axios.get(this.base_url)
         .then(res=>{
           console.log(res.data)
-          let result = res.data["近一月新增数量"]
+          let result = res.data["近一年新增数量"]
           console.log(typeof result)
           let leakresult = []
           for (let i in result) {
             let arrlist = []
             let security = ""
             let cve_id = result[i]["cveID"]
+            let title = result[i]["title"]
             if (result[i]["cvssV2"] != undefined) {
               security = result[i]["cvssV2"]["severity"]
               if (security == "HIGH") {
@@ -51,15 +53,12 @@ export default {
               security = "未知"
             }
             let type = result[i]["type01"][0]
-            let poc = result[i]["poc"]
-            console.log(poc)
-            if (poc == "") {
-              poc = "暂无POC"
-            }
+            let published = result[i]["publishedDate"]
             arrlist.push(cve_id)
+            arrlist.push(title)
             arrlist.push(security)
             arrlist.push(type)
-            arrlist.push(poc)
+            arrlist.push(published)
             leakresult.push(arrlist)
           }
           // res.data.map(item =>{
@@ -68,10 +67,10 @@ export default {
           // })
           // 注意此处赋值方式，this.config.data = leakresult 无效
           this.config = {
-            header: ['CVE-ID', '危险级别', '攻击类型', 'POC'],
+            header: ['CVE-ID','漏洞名称', '危险级别', '攻击类型', '发布日期'],
             data: leakresult,
-            index: true,
-            columnWidth: [70,150,200,350,400],
+            index: false,
+            columnWidth: [200,500], //100,100,200,100,100
             align: ['center'],
             rowNum: 7,
             headerBGC: '#1981f6',
@@ -81,6 +80,9 @@ export default {
             evenRowBGC: 'rgba(10, 29, 50, 0.8)'
           }
         });
+    },
+    hover() {
+      alert("hello")
     }
   },
   mounted () {
