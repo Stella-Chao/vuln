@@ -89,6 +89,20 @@ def connect_device():
     connection = connect_vuln().device
     return connection
 
+# 连接 total
+def connect_total():
+    connection = connect_vuln().total
+    return connection
+
+# 连接 github
+def connect_github_poc():
+    connection = connect_vuln().github
+    return connection
+
+# 连接 github
+def connect_poc():
+    connection = connect_vuln().poc
+    return connection
 
 '''从cve中抽取出有用字段存入tfiot'''
 def convert1():
