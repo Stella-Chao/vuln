@@ -8,6 +8,7 @@ const user = Mock.mock({
   position: '@POSITION'
 })
 Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
+  console.log('测试...')
   let result = {data: {}}
   console.log(body)
   const {code, roles} = JSON.parse(body)['name']
@@ -17,7 +18,7 @@ Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
   if (code === 'OK' && roles === 'admin') {
     success = true
     result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit']}]
-    result.data.roles = [{id: 'admin', operation: ['add', 'edit', 'delete']}]
+    result.data.roles = [{id: 'test', operation: ['add', 'edit', 'delete']}]
   } else if (code === 'OK' && roles === 'User') {
     success = true
     result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit']}]

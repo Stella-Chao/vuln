@@ -98,16 +98,23 @@ const options = {
           component: BlankView,
           children: [
             {
+              path: 'test',
+              name: 'Test'
+            },
+            {
               path: 'vedio',
-              name: '视频监控类'
+              name: '视频监控类',
+              component: () => import('@/pages/kg/Graph01')
             },
             {
               path: 'mobile',
-              name: '移动设备类'
+              name: '移动设备类',
+              component: () => import('@/pages/kg/Graph02')
             },
             {
               path: 'industry',
-              name: '工业控制类'
+              name: '工业控制类',
+              component: () => import('@/pages/kg/Graph03')
             },
             {
               path: 'smart',
@@ -119,7 +126,10 @@ const options = {
           path: 'userlist',
           name: '用户管理',
           meta: {
-            icon: 'table'
+            icon: 'table',
+            authority: {
+              role: 'admin'
+            }
           },
           // component: PageView,
           component: () => import('@/pages/list/UserList'),
@@ -129,6 +139,14 @@ const options = {
           name: '关于我们',
           meta: {
             icon: 'profile'
+          }
+        },
+        {
+          path: 'useredit',
+          name: '用户编辑',
+          component: () => import('@/pages/account/userEdit'),
+          meta: {
+            invisible: true
           }
         }
       ]

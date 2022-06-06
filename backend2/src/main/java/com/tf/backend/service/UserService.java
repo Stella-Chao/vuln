@@ -63,6 +63,7 @@ public class UserService {
         update.set("phone", user.getPhone());
         update.set("company", user.getCompany());
         update.set("profession", user.getProfession());
+        update.set("role", user.getRole());
         return mongoTemplate.findAndModify(query, update, User.class);
     }
 

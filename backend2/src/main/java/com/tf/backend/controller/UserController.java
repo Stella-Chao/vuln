@@ -66,7 +66,9 @@ public class UserController {
             user.setCompany(company);
             user.setPhone(phone);
             user.setProfession(profession);
+            System.out.println("test...");
             userService.add(user);
+            System.out.println("test2...");
         } else {
             System.out.println("用户名已存在！");
         }
@@ -100,7 +102,7 @@ public class UserController {
             HashMap<Object, Object> role = new HashMap<>();
             if ("admin".equals(user.getRole())) {
                 role.put("id", "admin");
-                role.put("operation", new String[]{"add","edit"});
+                role.put("operation", new String[]{"add","edit","delete"});
             }
             if ("user".equals(user.getRole())) {
                 role.put("id", "user");
@@ -166,13 +168,20 @@ public class UserController {
     @PostMapping("/modify")
     @ResponseBody
     public String modify(@RequestBody JSONObject param) {
+        System.out.println(param);
         String username = param.get("username").toString();
         User user = userService.getUserByName(username);
-        user.setCompany(param.get("company").toString());
+        user.setCompany(param.get("company") == null ? "" : param.get("company").toString());
         user.setPhone(param.get("phone").toString());
-        user.setProfession(param.get("profession").toString());
-        user.setEmail(param.get("email").toString());
-        user.setGender(param.get("gender").toString());
+        user.setProfession(param.get("profession") == null ? "" : param.get("profession").toString());
+        user.setEmail(param.get("email") == null ? "" : param.get("email").toString());
+        user.setGender(param.get("gender") == null ? "" : param.get("gender").toString());
+        user.setRole(param.get("role").toString());
+        Object password = param.get("password");
+        if (!password.equals("")) {
+            user.setPassword(passwordEncoder.encode(password.toString()));
+        }
+        System.out.println(user);
         userService.update(user);
         return "修改成功!";
     }
@@ -210,6 +219,13 @@ public class UserController {
         return "删除成功！";
     }
 
+    @GetMapping("/find")
+    public User findByName(String username) {
+        System.out.println(username);
+        User user = userService.getUserByName(username);
+        System.out.println(user);
+        return userService.getUserByName(username);
+    }
 
     @GetMapping("/test")
     public String test() {

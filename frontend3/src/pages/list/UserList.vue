@@ -21,7 +21,7 @@
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-input v-model="phone" placeholder="请输入" />
+              <a-input v-model="phone" placeholder="-" :disabled="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -32,7 +32,7 @@
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-input v-model="email" placeholder="请输入"/>
+              <a-input v-model="email" placeholder="-" :disabled="true"/>
             </a-form-item>
           </a-col>
           </a-row>
@@ -43,7 +43,7 @@
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-input v-model="company" placeholder="请输入"/>
+              <a-input v-model="company" placeholder="-" :disabled="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -65,12 +65,12 @@
         </div>
         <div slot="action" slot-scope="{record}">
           
-          <!-- <router-link :to="{name:'编辑页',query:{id:record.cveID}}" >
+          <router-link :to="{name:'用户编辑',query:{user:record}}" >
             <a style="margin-right: 8px">
               <a-icon type="edit"/>编辑
             </a>
-          </router-link> -->
-          <a @click="deleteRecord(record.phone)">
+          </router-link>
+          <a @click="deleteRecord(record.phone)" v-auth="`delete`">
             <a-icon type="delete" />删除
           </a>
           <!-- <router-link :to="`/list/query/detail/${record.key}`" >详情</router-link> -->
@@ -148,9 +148,9 @@ export default {
       },
     }
   },
-  // authorize: {
-  //   deleteRecord: 'delete'
-  // },
+  authorize: {
+    deleteRecord: 'delete'
+  },
   created() {
     console.log(base_url)
     this.getData()
@@ -188,14 +188,20 @@ export default {
 
     },
     search() {
-        this.url = base_url +'/tf/search2?cveID='+this.cveid+'&severity='+this.severity+'&attack='+this.attack+'&type='+this.type+'&description='+this.descri
-        axios.get(this.url +'&size='+this.pagination.defaultPageSize+'&page=1').then(res=>{
-        console.log('查询结果...')
-        console.log(res.data.result)
-        console.log(this.pagination)
-        this.pagination.current = this.pagination.defaultCurrent
-        this.dataSource = res.data.result
-        this.pagination.total = res.data.total
+        axios.get(base_url +'/user/find?username=' + this.username).then(res=>{
+          console.log('查询结果...')
+          console.log(res.data)
+          // console.log(this.pagination)
+          // this.pagination.current = this.pagination.defaultCurrent
+          let list = []
+          list.push(res.data)
+          this.dataSource = list
+          if (res.data === undefined) {
+            this.pagination.total = 0
+          } else {
+            this.pagination.total = 1
+          }
+          
       })
     },
     reset() {
@@ -211,7 +217,9 @@ export default {
       param["phone"] = key
       axios.post(base_url + '/user/delete', param).then(res => {
         console.log(res.data);
+        this.getData()
         this.$message.success("删除成功！", 2);
+        this.created()
       })
     },
     toggleAdvanced () {
