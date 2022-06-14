@@ -9,7 +9,10 @@
         <a-input v-model="form.password"/>
         </a-form-model-item>
         <a-form-model-item label="角色">
-        <a-input v-model="form.role"/>
+          <a-select v-model="form.role" placeholder="请选择">
+            <a-select-option value="user">普通用户</a-select-option>
+            <a-select-option value="admin">管理员</a-select-option>
+          </a-select>
         </a-form-model-item>
         <a-form-model-item label="性别">
         <a-input v-model="form.gender" />
