@@ -3,9 +3,9 @@ from email.mime.text import MIMEText
 
 def send(receivers, news):
     # 发送方邮箱
-    sender = '1394604132@qq.com'
+    sender = 'tfsecurity@163.com'
     # 发送方授权码
-    sender_pass = 'aubrynohmjqpjgci'
+    sender_pass = 'DVUWTHMLEHSUTWPQ'
     # email 内容设置
     message = MIMEText('content', 'plain', 'utf-8')
     # 邮件主题
@@ -14,7 +14,7 @@ def send(receivers, news):
 
     '''当日新增漏洞信息'''
     message['news'] = news
-    message['情报内容'] = ''
+    message['情报内容'] = 'test'
 
     # 接收方信息
     message['To'] = '愿天下无漏洞!'
@@ -34,3 +34,9 @@ def send(receivers, news):
         print('success')
     except smtplib.SMTPException as e:
         print('error', e)
+
+
+if __name__ == '__main__':
+    receiver = ['zhanghe0309@qq.com']
+    news = "test"
+    send(receiver, news)

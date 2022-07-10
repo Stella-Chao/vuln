@@ -3,7 +3,7 @@ import pandas as pd
 from config import MONGO_HOST,MONGO_USER,MONGO_PASSWORD
 
 def connect_vuln():
-    client = pymongo.MongoClient(MONGO_HOST, 27017)
+    client = pymongo.MongoClient(MONGO_HOST, 27017, ssl = True)
     # 连接vuln数据库，账号密码认证
     db = client.vuln
     db.authenticate(MONGO_USER, MONGO_PASSWORD)

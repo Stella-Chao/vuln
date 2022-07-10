@@ -1,7 +1,7 @@
 package com.tf.backend.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tf.backend.dao.mongo.TFiotDao;
+import com.tf.backend.repository.mongo.TFiotDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,8 +49,8 @@ public class DashBoardController {
     public String getScreenData03() {
         JSONObject dashboard = new JSONObject();
 //        dashboard.put("近一周新增数量",iotDao.getWeekVuln());
-        dashboard.put("近一月新增数量",iotDao.getMonthVuln());
-//        dashboard.put("近一年新增数量",iotDao.getYearVuln());
+//        dashboard.put("近一月新增数量",iotDao.getMonthVuln());
+        dashboard.put("近一年新增数量",iotDao.getYearVuln());
         return dashboard.toJSONString();
     }
 

@@ -135,6 +135,18 @@ const options = {
           component: () => import('@/pages/list/UserList'),
         },
         {
+          path: 'devicelist',
+          name: '设备管理',
+          meta: {
+            icon: 'table',
+            authority: {
+              role: 'admin'
+            }
+          },
+          // component: PageView,
+          component: () => import('@/pages/device/DeviceList'),
+        },
+        {
           path: 'about',
           name: '关于我们',
           meta: {

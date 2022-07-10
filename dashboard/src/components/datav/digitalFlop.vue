@@ -33,6 +33,7 @@ export default {
     createData () {
       const { randomExtend } = this
       axios.get('http://127.0.0.1:9090/dashboard/data01')
+      // axios.get('http://172.16.0.37:9090/dashboard/data01')
         .then(res=>{
           this.result = res.data
           this.digitalFlopData = [

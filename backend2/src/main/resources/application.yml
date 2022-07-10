@@ -44,6 +44,14 @@ spring:
       min-heartbeat-frequency: 500
       heartbeat-frequency: 10000
       local-threshold: 15
+    neo4j:
+      database: tfsec
+
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: test
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml

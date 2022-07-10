@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     getSeverityDate() {
-      axios.get(base_url + 'tf/severity').then(res=>{
+      axios.get(base_url + '/tf/severity').then(res=>{
         console.log(res.data)
         sourceData[0]["count"] = res.data["超危"]
         sourceData[1]["count"] = res.data["高危"]

@@ -1,6 +1,6 @@
 package com.tf.backend.service.impl;
 
-import com.tf.backend.dao.NvdMapper;
+import com.tf.backend.repository.NvdMapper;
 import com.tf.backend.model.domain.Nvd;
 import com.tf.backend.service.NvdService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class NvdServiceImpl implements NvdService {
-    @Autowired
+
     NvdMapper nvdMapper;
 
     @Override

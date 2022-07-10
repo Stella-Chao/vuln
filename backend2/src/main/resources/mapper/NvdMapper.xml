@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tf.backend.dao.NvdMapper">
+<mapper namespace="com.tf.backend.repository.NvdMapper">
 
     <sql id="NvdVO">
         id, name, url, description, cvss2_nvd_base_score,cvss3_nvd_base_score,cvss2_nvd_vector
