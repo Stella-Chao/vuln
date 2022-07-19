@@ -136,3 +136,23 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+.DS_Store
+node_modules/
+
+cve_detail/
+package-lock.json
+list.txt
+script/data/cveid.csv
+script/data/data01.csv
+script/utils/product.csv
+script/utils/relation1.csv
+script/utils/relation2.csv
+script/utils/relation3.csv
+script/utils/type.csv
+script/utils/vuln.csv
+script/utils/cvss.csv
+backend2/.mvn/wrapper/maven-wrapper.jar
+dashboard/src/components/datav/cards copy.vue
+backend2/mvnw.cmd
+backend2/mvnw

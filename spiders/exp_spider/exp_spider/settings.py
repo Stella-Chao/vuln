@@ -1,4 +1,4 @@
-# Scrapy settings for cnvd_spider project
+# Scrapy settings for exp_spider project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,14 +7,11 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'cnvd_spider'
+BOT_NAME = 'exp_spider'
 
-SPIDER_MODULES = ['cnvd_spider.spiders']
-NEWSPIDER_MODULE = 'cnvd_spider.spiders'
+SPIDER_MODULES = ['exp_spider.spiders']
+NEWSPIDER_MODULE = 'exp_spider.spiders'
 
-
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'cnvd_spider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -37,34 +34,29 @@ ROBOTSTXT_OBEY = True
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+DEFAULT_REQUEST_HEADERS = {
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language': 'en',
+}
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'cnvd_spider.middlewares.CnvdSpiderSpiderMiddleware': 543,
+#    'exp_spider.middlewares.ExpSpiderSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'cnvd_spider.middlewares.CnvdSpiderDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'exp_spider.middlewares.ExpSpiderDownloaderMiddleware': 543,
+}
 
-# Enable or disable extensions
-# See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
 
-# Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'cnvd_spider.pipelines.CnvdSpiderPipeline': 300,
-#}
+
+
+ITEM_PIPELINES = {
+   'exp_spider.pipelines.ExpSpiderPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -86,3 +78,12 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# MONGODB 主机名
+MONGODB_HOST = "127.0.0.1"
+# MONGODB 端口号
+MONGODB_PORT = 27017
+# 数据库名称
+MONGODB_DBNAME = "vuln"
+# 存放数据的表名称
+MONGODB_COLLECTION = "exploit"

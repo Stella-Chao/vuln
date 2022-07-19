@@ -16,9 +16,9 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
     def start_requests(self):
         base = 'https://jvndb.jvn.jp/'
         search_base = 'https://jvndb.jvn.jp/search/index.php?mode=_vulnerability_search_IA_VulnSearch&lang=ja&keyword=&useSynonym=1&vendor=&product=&datePublicFromYear={}&datePublicFromMonth={}&datePublicToYear={}&datePublicToMonth={}&dateLastPublishedFromMonth=&dateLastPublishedFromYear=&dateLastPublishedToMonth=&dateLastPublishedToYear=&cwe=&searchProductId=&pageNo={}'
-        from_year = "2021"
+        from_year = "2000"
         from_month = "06"
-        to_year = "2021"
+        to_year = "2001"
         to_month = "10"
         page = 1
         urls = []

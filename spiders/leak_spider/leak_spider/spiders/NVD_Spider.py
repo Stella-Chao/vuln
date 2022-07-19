@@ -27,7 +27,6 @@ class NVD_Spider(scrapy_redis.spiders.RedisSpider):
         # 获取vuln name 后请求api, 存入mongodb
         vuln = requests.get('https://services.nvd.nist.gov/rest/json/cve/1.0/'+name).json()['result']['CVE_Items'][0]
         #
-        time.sleep(2)
         client = pymongo.MongoClient(host='localhost', port=27017)
         collection = client.vuln.nvd
         result = collection.insert_one(vuln)
