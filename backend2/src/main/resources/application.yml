@@ -48,7 +48,7 @@ spring:
       database: tfsec
 
   neo4j:
-    uri: bolt://10.0.3.37:7474
+    uri: bolt://127.0.0.1:7474
     authentication:
       username: neo4j
       password: tfsecneo4j
