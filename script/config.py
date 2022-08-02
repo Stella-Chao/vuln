@@ -2,5 +2,5 @@
 MONGO_HOST = '10.0.3.37'
 # MONGO_HOST = '127.0.0.1'
 # vuln
-MONGO_USER = 'root'
+MONGO_USER = 'tf'
 MONGO_PASSWORD = 'wn3e8d4d'

@@ -23,7 +23,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://root:wn3e8d4d@10.0.3.37:27017/vuln
+      uri: mongodb://tf:wn3e8d4d@10.0.3.37:27017/vuln
 #      uri: mongodb://zh:zhanghe@10.0.3.31:27017/vuln
     option:
       min-connection-per-host: 0
