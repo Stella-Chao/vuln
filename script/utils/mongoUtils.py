@@ -6,7 +6,7 @@ def connect_vuln():
     client = pymongo.MongoClient(MONGO_HOST, 27017, ssl = True)
     # 连接vuln数据库，账号密码认证
     db = client.vuln
-    db.authenticate(MONGO_USER, MONGO_PASSWORD)
+    db.authenticate(MONGO_USER, MONGO_PASSWORD, mechanism='MONGODB-CR')
     return db
 
 # 连接 nvd (collection)
