@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/leak?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false
     username: root
-    password: 123456
+    password: VpFr8XrFsRUGic
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     initialSize: 3
@@ -23,7 +23,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://zh:zhanghe@127.0.0.1:27017/vuln
+      uri: mongodb://root:wn3e8d4d@10.0.3.37:27017/vuln
 #      uri: mongodb://zh:zhanghe@10.0.3.31:27017/vuln
     option:
       min-connection-per-host: 0
@@ -48,10 +48,10 @@ spring:
       database: tfsec
 
   neo4j:
-    uri: bolt://localhost:7687
+    uri: bolt://10.0.3.37:7474
     authentication:
       username: neo4j
-      password: test
+      password: tfsecneo4j
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml

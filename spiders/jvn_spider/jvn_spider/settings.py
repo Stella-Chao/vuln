@@ -16,11 +16,11 @@ SCHEDULER='scrapy_redis.scheduler.Scheduler'
 DUPEFILTER_CLASS='scrapy_redis.dupefilter.RFPDupeFilter'
 SCHEDULER_PERSIST=True
 
-REDIS_HOST = '123.57.77.254'
+REDIS_HOST = '10.0.3.37'
 REDIS_PORT = 6379
 REDIS_ENCODING = 'utf-8'
 REDIS_PARAMS = {
-    'password': 'zhanghe',
+    'password': 'sA6GCtV6doCe8X',
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -101,7 +101,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # MONGODB 主机名
-MONGODB_HOST = "127.0.0.1"
+MONGODB_HOST = "10.0.3.37"
 # MONGODB 端口号
 MONGODB_PORT = 27017
 # 数据库名称
