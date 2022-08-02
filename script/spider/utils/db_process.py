@@ -1,6 +1,7 @@
 '''文档之间的转换'''
 import time
-
+import sys
+sys.path.append("..")
 from mongoUtils import connect_iot2,connect_iot,connect_jvndb2,connect_exploit
 from translate import translate
 from spider.spider_utils import random_sleep
@@ -12,7 +13,7 @@ def convert():
     iot2 = connect_iot2()
     for item in iot.find():
         vuln = item
-        vuln["title"] = ""
+        vuln["title"] = "请查看详情"
         iot2.insert_one(vuln)
 
 def translate_title():
