@@ -2,46 +2,44 @@
   <div class="analysis">
     <a-row style="margin-top: 0" :gutter="[24, 24]">
       <a-col :sm="24" :md="12" :xl="6">
-        <chart-card :loading="loading" title="IOT漏洞总数" total=" 12,345">
-          <a-tooltip :title="$t('introduce')" slot="action">
+        <chart-card :loading="loading" title="IOT漏洞总数" :total= "total">
+          <!-- <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o"/>
-          </a-tooltip>
+          </a-tooltip> -->
           <div>
-            <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
-            <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
+            <!-- <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
+            <trend :term="$t('dod')" :target="100" :value="89" :scale="0" /> -->
           </div>
-          <div slot="footer">日均新增漏洞数量 <span>1</span></div>
+          <!-- <div slot="footer">日均新增漏洞数量 <span>1</span></div> -->
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6">
-        <chart-card :loading="loading" title="漏洞提交总数" total="1,234">
-          <a-tooltip :title="$t('introduce')" slot="action">
+        <chart-card :loading="loading" title="漏洞提交总数" :total="submit">
+          <!-- <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
-            <!-- <mini-area /> -->
             <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
             <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
           </div>
-          <div slot="footer">日均提交漏洞数 <span>1</span></div>
+          <div slot="footer">日均提交漏洞数 <span>1</span></div> -->
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6">
-        <chart-card :loading="loading" title="POC总数" total="7,345">
-          <a-tooltip :title="$t('introduce')" slot="action">
+        <chart-card :loading="loading" title="POC总数" :total="poc">
+          <!-- <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <!-- <mini-bar /> -->
+          </a-tooltip> -->
+          <!-- <div>
             <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
             <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
-          </div>
-          <div slot="footer">日均新增POC总数 <span>1</span></div>
+          </div> -->
+          <!-- <div slot="footer">日均新增POC总数 <span>1</span></div> -->
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6">
-        <chart-card :loading="loading" title="高危占比" total="65%">
-          <a-tooltip :title="$t('introduce')" slot="action">
+        <chart-card :loading="loading" title="高危漏洞" :total="highNum">
+          <!-- <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
@@ -50,7 +48,7 @@
           <div slot="footer" style="white-space: nowrap;overflow: hidden">
             <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
             <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
-          </div>
+          </div> -->
         </chart-card>
       </a-col>
     </a-row>
@@ -104,7 +102,7 @@
         </a-card>
       </a-col>
     </a-row>
-    <a-card :loading="loading" title="最新动态" :bordered="false">
+    <!-- <a-card :loading="loading" title="最新动态" :bordered="false">
       <a-list>
         <a-list-item :key="index" v-for="(item, index) in activities">
           <a-list-item-meta>
@@ -114,7 +112,7 @@
           </a-list-item-meta>
         </a-list-item>
       </a-list>
-    </a-card>
+    </a-card> -->
     <a-card :loading="loading" title="情报订阅" :bordered="false">
       <div>
         <div :style="{ borderBottom: '1px solid #E9E9E9' }">
@@ -147,13 +145,14 @@
 import ChartCard from '../../../components/card/ChartCard'
 // import MiniArea from '../../../components/chart/MiniArea'
 // import MiniBar from '../../../components/chart/MiniBar'
-import MiniProgress from '../../../components/chart/MiniProgress'
+// import MiniProgress from '../../../components/chart/MiniProgress'
 import Bar from '../../../components/chart/Bar'
 import RankingList from '../../../components/chart/RankingList'
 import HotSearch from './HotSearch'
 import SalesData from './SalesData'
 import {request, METHOD} from '@/utils/request'
-import Trend from '../../../components/chart/Trend'
+// import Trend from '../../../components/chart/Trend'
+import axios from 'axios'
 
 const rankList = [{name:"海康威视", total:100},
                   {name:"思科",total: 99},
@@ -168,7 +167,7 @@ const rankList = [{name:"海康威视", total:100},
 
 const plainOptions = ['视频监控类', '智能家居类', '工业控制类', '移动设备类'];
 const defaultCheckedList = [];
-
+const base_url = process.env.VUE_APP_API_BASE_URL
 export default {
   name: 'Analysis',
   i18n: require('./i18n'),
@@ -181,9 +180,32 @@ export default {
       indeterminate: true,
       checkAll: false,
       plainOptions,
+      total: "",
+      poc: "",
+      submit: "",
+      highNum: ""
     }
   },
+
   methods: {
+    getData() {
+        axios.get(base_url + '/tf/get/count').then(res=>{
+          console.log('漏洞总数量：',res.data)
+          this.total = res.data
+        })
+        axios.get(base_url + '/poc/get/pocNum').then(res=>{
+          console.log('Poc 总数量：',res.data)
+          this.poc = res.data
+        })
+        axios.get(base_url + '/tf/get/submitNum').then(res=>{
+          console.log('漏洞提交总数量：',res.data)
+          this.submit = res.data
+        })
+        axios.get(base_url + '/tf/highnum').then(res=>{
+          console.log('高危漏洞：',res.data)
+          this.highNum = res.data
+        })
+    },
     onChange(checkedList) {
       this.indeterminate = !!checkedList.length && checkedList.length < plainOptions.length;
       this.checkAll = checkedList.length === plainOptions.length;
@@ -199,8 +221,10 @@ export default {
   created() {
     setTimeout(() => this.loading = !this.loading, 1000)
     request('/work/activity', METHOD.GET).then(res => this.activities = res.data)
+    this.getData()
   },
-  components: { SalesData, HotSearch, RankingList, Bar, ChartCard, MiniProgress, Trend}
+  // components: { SalesData, HotSearch, RankingList, Bar, ChartCard, MiniProgress, Trend}
+  components: { SalesData, HotSearch, RankingList, Bar, ChartCard }
 }
 </script>
 

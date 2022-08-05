@@ -83,6 +83,11 @@ public class TFiotController {
         }
     }
 
+    @GetMapping("get/submitNum")
+    public Long getSubmitTotal() {
+        return subDao.getSubmitNum();
+    }
+
     @GetMapping("test")
     public TFiot test() {
         Map<String,String> map = new HashMap<>();
@@ -107,5 +112,14 @@ public class TFiotController {
         json.put("中危", iotDao.getMediumNum());
         json.put("低危", iotDao.getLowNum());
         return json.toJSONString();
+    }
+
+    @GetMapping("highnum")
+    public Long getHighNum() {
+        Long total = 0L;
+        total += iotDao.getHighNum();
+        total += iotDao.getCriticalNum();
+        System.out.println("高危漏洞数量：" + total);
+        return total;
     }
 }

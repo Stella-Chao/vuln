@@ -1,6 +1,7 @@
 package com.tf.backend.repository.mongo;
 
 import com.tf.backend.model.domain.POC;
+import com.tf.backend.model.domain.SubmitVuln;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -19,5 +20,14 @@ public class PocDao {
         System.out.println("查询POC...");
         System.out.println(query);
         return mongoTemplate.findOne(query,POC.class);
+    }
+
+    // 获取 Poc 总数
+    public Long getPocNum() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").exists(true));
+        Long total = mongoTemplate.count(query, POC.class);
+        System.out.println("Poc 总数：" + total);
+        return total;
     }
 }

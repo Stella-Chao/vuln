@@ -17,4 +17,9 @@ public class PocController {
     public POC findPoc(String cveID) {
         return pocDao.getPocByCve(cveID);
     }
+
+    @GetMapping("get/pocNum")
+    public Long getPocTotal() {
+        return pocDao.getPocNum();
+    }
 }
