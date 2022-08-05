@@ -5,7 +5,7 @@ import random
 import json
 from hashlib import md5
 
-# 每月可免费翻译200w字符
+# 每月可免费翻译 5w字符 (baidu API)
 appid = '20200202000379572'
 appkey = 'pjNWyL2apr4DOb1qeaPh'
 

@@ -19,6 +19,11 @@ def connect_nvd01():
     collection = connect_vuln().nvd01
     return collection
 
+# 连接 user (collection)
+def connect_user():
+    collection = connect_vuln().user
+    return collection
+
 # 连接 cnvd (collection)
 def connect_cnvd():
     collection = connect_vuln().cnvd
