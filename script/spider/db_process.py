@@ -2,9 +2,10 @@
 import time
 import sys
 sys.path.append("..")
+from spider_utils import random_sleep
 from mongoUtils import connect_iot2,connect_iot,connect_jvndb2,connect_exploit
 from translate import translate
-from spider.spider_utils import random_sleep
+
 
 
 # iot => iot2 增加 title 字段
@@ -183,13 +184,13 @@ def fun():
         poc.update_one({"edb_id": id}, {"$set": {"code_url": new}})
 
 if __name__ == '__main__':
-    # convert()
-    # translate_title()
-    # title2()
-    # convert_cvssv3_attacker()
-    # translate_title2()
-    # tranlate_type01()
-    # convert_severity()
-    # translate_description()
+    convert()
+    translate_title()
+    title2()
+    convert_cvssv3_attacker()
+    translate_title2()
+    tranlate_type01()
+    convert_severity()
+    translate_description()
     # getPocNum()
-    fun()
+    # fun()
