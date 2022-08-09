@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tf.backend.repository.NvdMapper">
+<mapper namespace="com.tf.eye.repository.NvdMapper">
 
     <sql id="NvdVO">
         id, name, url, description, cvss2_nvd_base_score,cvss3_nvd_base_score,cvss2_nvd_vector
         ,cvss3_nvd_vector, refer, cwe_id, cwe_name, cpe, tech_level, comp_level
     </sql>
 
-    <select id="getList" resultType="com.tf.backend.model.domain.Nvd">
+    <select id="getList" resultType="com.tf.eye.model.domain.Nvd">
         select <include refid="NvdVO"/>
         from nvd
     </select>
     
-    <select id="getVulnByName" parameterType="String" resultType="com.tf.backend.model.domain.Nvd">
+    <select id="getVulnByName" parameterType="String" resultType="com.tf.eye.model.domain.Nvd">
         select <include refid="NvdVO"/>
         from nvd
         where name = #{name}
     </select>
 
-    <select id="getVulnsByDescription" parameterType="String" resultType="com.tf.backend.model.domain.Nvd">
+    <select id="getVulnsByDescription" parameterType="String" resultType="com.tf.eye.model.domain.Nvd">
         select <include refid="NvdVO"/>
         from nvd
         where description like #{description}
