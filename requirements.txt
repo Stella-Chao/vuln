@@ -6,3 +6,5 @@ Scrapy==2.4.1
 scrapy_redis==0.7.1
 pandas
 retrying
+json
+tencentcloud-sdk-python
