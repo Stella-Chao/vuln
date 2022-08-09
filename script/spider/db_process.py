@@ -1,12 +1,48 @@
 '''文档之间的转换'''
 import time
 import sys
+import re
 sys.path.append("..")
 from spider_utils import random_sleep
-from mongoUtils import connect_iot2,connect_iot,connect_jvndb2,connect_exploit
+from mongoUtils import connect_iot2,connect_iot,connect_jvndb2,connect_exploit,connect_nvd01
 from translate import translate
 
-
+# 从 nvd(collection) 中抽取出 IOT(collection)
+def nvd2iot():
+    conn1 = connect_nvd01()
+    conn2 = connect_iot()
+    for vuln in conn1.find():
+        description = vuln["cve"]["description"]["description_data"][0]["value"]
+        # 关键字匹配，re.I 忽略大小写
+        if len(re.findall(r'device|iot|router',description,re.I)) > 0:
+            iot = {}
+            iot["description"] = description
+            iot["CVE-ID"] = vuln["cve"]["CVE_data_meta"]["ID"]
+            if "baseMetricV3" in vuln["impact"]:
+                iot["baseMetricV3"] = vuln["impact"]["baseMetricV3"]
+            if "baseMetricV2" in vuln["impact"]:
+                iot["baseMetricV2"] = vuln["impact"]["baseMetricV2"]
+            cwe = []
+            cpe = []
+            for cwe_item in vuln["cve"]["problemtype"]["problemtype_data"]:
+                for item_child in cwe_item["description"]:
+                    cwe.append(item_child["value"])
+            iot["CWE"] = cwe
+            for node in vuln["configurations"]["nodes"]:
+                for children in node["children"]:
+                    for cpe_item in children["cpe_match"]:
+                        cpe.append(cpe_item)
+            iot["CPE"] = cpe
+            iot["references"] = vuln["cve"]["references"]["reference_data"]
+            iot["publishedDate"] = vuln["publishedDate"]
+            iot["lastModifiedDate"] = vuln["lastModifiedDate"]
+            # 预留分类字段
+            iot["Type01"] = ""
+            iot["Type02"] = ""
+            iot["Type03"] = ""
+            iot["Type04"] = ""
+            iot["POC"] = ""
+            conn2.insert_one(iot)
 
 # iot => iot2 增加 title 字段
 def convert():
@@ -184,13 +220,20 @@ def fun():
         poc.update_one({"edb_id": id}, {"$set": {"code_url": new}})
 
 if __name__ == '__main__':
+    # 从 nvd01 中提取出 iot 数据存入 iot
+    nvd2iot()
+    # iot => iot2 添加 title 字段
     convert()
+    # 翻译 title
     translate_title()
+    # 将 references 中的 name 作为 title; 更改日期格式: 2021-10-06T20:15Z = > 2021-10-06
     title2()
+    # 将 cvssV3 的攻击向量转化为中文
     convert_cvssv3_attacker()
     translate_title2()
+    # 将漏洞类型转化为中文
     tranlate_type01()
+    # 将 cvssV3 中的危险级别翻译为中文
     convert_severity()
+    # 翻译漏洞描述信息
     translate_description()
-    # getPocNum()
-    # fun()
