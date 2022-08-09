@@ -73,6 +73,6 @@ def translate(query, from_lang, to_lang):
         resp = client.TextTranslate(req)
         # 输出json格式的字符串回包
         print(resp.to_json_string())
-
+        return resp.to_json_string()
     except TencentCloudSDKException as err:
         print(err)
