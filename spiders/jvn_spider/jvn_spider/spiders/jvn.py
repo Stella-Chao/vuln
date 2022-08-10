@@ -14,12 +14,12 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
     global count
     count = 0
     def start_requests(self):
-        base = 'https://jvndb.jvn.jp/'
+        base = 'https://jvndb.jvn.jp'
         search_base = 'https://jvndb.jvn.jp/search/index.php?mode=_vulnerability_search_IA_VulnSearch&lang=ja&keyword=&useSynonym=1&vendor=&product=&datePublicFromYear={}&datePublicFromMonth={}&datePublicToYear={}&datePublicToMonth={}&dateLastPublishedFromMonth=&dateLastPublishedFromYear=&dateLastPublishedToMonth=&dateLastPublishedToYear=&cwe=&searchProductId=&pageNo={}'
-        from_year = "2000"
+        from_year = "2021"
         from_month = "06"
-        to_year = "2001"
-        to_month = "10"
+        to_year = "2021"
+        to_month = "06"
         page = 1
         urls = []
         url = search_base.format(from_year,from_month,to_year,to_month,page)
@@ -40,7 +40,7 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
         while page <= pages:
             # proxy = self.get_proxy()
             url = search_base.format(from_year, from_month, to_year, to_month, page)
-            # print(url)
+            print(url)
             print("--------------------正在爬取第{}页-------------------".format(page))
             time.sleep(5)
             # res = requests.get(url,verify = False, proxies={"http": "http://{}".format(proxy)})
@@ -52,9 +52,10 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
                 td = tr.find_all('td')
                 if len(td) > 0:
                     url = base + td[0].a['href']
+                    print(url)
                     urls.append(url)
             page += 1
-        # urls = urls[]
+        print(urls)
         for link in urls:
             yield scrapy.Request(url=link, encoding='SHIFT_JIS', callback=self.parse2, dont_filter=True)
 
