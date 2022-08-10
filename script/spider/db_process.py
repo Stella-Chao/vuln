@@ -113,36 +113,37 @@ def tranlate_type01():
     iot2 = connect_iot2()
     for item in iot1.find():
         id = item["CVE-ID"]
-        type = item["Type01"][0]
-        if (type == "Denial Of Service"):
-            new = "拒绝服务"
-        elif (type == "Execute Code"):
-            new = "执行代码"
-        elif (type == "Overflow"):
-            new = "溢出"
-        elif (type == "Cross Site Scripting"):
-            new = "跨站脚本"
-        elif (type == "Directory traversal"):
-            new = "目录遍历"
-        elif (type == "Bypass a restriction or similar"):
-            new = "绕过"
-        elif (type == "Obtain Information"):
-            new = "获取信息"
-        elif (type == "Gain privileges"):
-            new = "获取权限"
-        elif (type == "Sql Injection"):
-            new = "SQL注入"
-        elif (type == "File Inclusion"):
-            new = "文件包含"
-        elif (type == "Memory corruption"):
-            new = "内存错误"
-        elif (type == "CSRF"):
-            new = "跨站请求伪造"
-        elif (type == "Http response splitting"):
-            new = "HTTP响应拆分"
-        else:
-            new = "其他"
-        iot2.update_one({"CVE-ID": id}, {"$set": {"Type01": new}})
+        if (len(item["Type01"]) > 0):
+            type = item["Type01"][0]
+            if (type == "Denial Of Service"):
+                new = "拒绝服务"
+            elif (type == "Execute Code"):
+                new = "执行代码"
+            elif (type == "Overflow"):
+                new = "溢出"
+            elif (type == "Cross Site Scripting"):
+                new = "跨站脚本"
+            elif (type == "Directory traversal"):
+                new = "目录遍历"
+            elif (type == "Bypass a restriction or similar"):
+                new = "绕过"
+            elif (type == "Obtain Information"):
+                new = "获取信息"
+            elif (type == "Gain privileges"):
+                new = "获取权限"
+            elif (type == "Sql Injection"):
+                new = "SQL注入"
+            elif (type == "File Inclusion"):
+                new = "文件包含"
+            elif (type == "Memory corruption"):
+                new = "内存错误"
+            elif (type == "CSRF"):
+                new = "跨站请求伪造"
+            elif (type == "Http response splitting"):
+                new = "HTTP响应拆分"
+            else:
+                new = "其他"
+            iot2.update_one({"CVE-ID": id}, {"$set": {"Type01": new}})
 
 '''将cvssV3中的危险级别改为中文'''
 def convert_severity():
