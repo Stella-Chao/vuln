@@ -7,6 +7,9 @@ import scrapy_redis.spiders
 
 from jvn_spider.items import JvnSpiderItem
 from bs4 import BeautifulSoup
+import urllib3
+
+urllib3.disable_warnings()
 
 # class JVNSpider(scrapy.Spider):
 class JVNSpider(scrapy_redis.spiders.RedisSpider):
@@ -16,9 +19,9 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
     def start_requests(self):
         base = 'https://jvndb.jvn.jp'
         search_base = 'https://jvndb.jvn.jp/search/index.php?mode=_vulnerability_search_IA_VulnSearch&lang=ja&keyword=&useSynonym=1&vendor=&product=&datePublicFromYear={}&datePublicFromMonth={}&datePublicToYear={}&datePublicToMonth={}&dateLastPublishedFromMonth=&dateLastPublishedFromYear=&dateLastPublishedToMonth=&dateLastPublishedToYear=&cwe=&searchProductId=&pageNo={}'
-        from_year = "2021"
+        from_year = "2010"
         from_month = "06"
-        to_year = "2021"
+        to_year = "2010"
         to_month = "06"
         page = 1
         urls = []
@@ -28,6 +31,7 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
         soup = BeautifulSoup(res.text, features="lxml")
         print(soup.title.string)
         # 获取记录总数
+        soup.find_all('td', class_="pager_count_class")
         str = soup.find_all('td', class_="pager_count_class")[0].get_text().strip()
         total = int(re.match('.+?(?=\件)', str).group(0))
         print('total:', total)

@@ -113,7 +113,7 @@ class JvnSpiderDownloaderMiddleware:
         # 请求头信息  获取到的是字典
         # 这一步可有可无 因为你可以在settings中设置一个共同的User-Agent
         request.headers['User-Agent'] = random.choice(self.user_agent_list)
-        print(request.headers['User-Agent'])
+        # print(request.headers['User-Agent'])
         return None
 
     def process_response(self, request, response, spider):

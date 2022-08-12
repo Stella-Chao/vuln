@@ -17,12 +17,15 @@ DUPEFILTER_CLASS='scrapy_redis.dupefilter.RFPDupeFilter'
 SCHEDULER_PERSIST=True
 
 REDIS_HOST = '10.0.3.37'
+# REDIS_HOST = '123.57.77.254'
 REDIS_PORT = 6379
 REDIS_ENCODING = 'utf-8'
 REDIS_PARAMS = {
     'password': 'sA6GCtV6doCe8X',
 }
-
+# REDIS_PARAMS = {
+#     'password': 'zhanghe',
+# }
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'jvn_spider (+http://www.yourdomain.com)'
 
@@ -30,7 +33,7 @@ REDIS_PARAMS = {
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -102,9 +105,14 @@ ITEM_PIPELINES = {
 
 # MONGODB 主机名
 MONGODB_HOST = "10.0.3.37"
+# MONGODB_HOST = "127.0.0.1"
 # MONGODB 端口号
 MONGODB_PORT = 27017
 # 数据库名称
 MONGODB_DBNAME = "vuln"
 # 存放数据的表名称
 MONGODB_COLLECTION = "jvndb2"
+
+EXTENSIONS = {
+   'scrapy.telnet.TelnetConsole': None
+}
