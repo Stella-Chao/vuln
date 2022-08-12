@@ -112,6 +112,8 @@ MONGODB_PORT = 27017
 MONGODB_DBNAME = "vuln"
 # 存放数据的表名称
 MONGODB_COLLECTION = "jvndb2"
+# MONGO_USER = "spider" #用户
+# MONGO_PSW = "spider" #密码
 
 EXTENSIONS = {
    'scrapy.telnet.TelnetConsole': None
