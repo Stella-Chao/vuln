@@ -31,8 +31,15 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
         soup = BeautifulSoup(res.text, features="lxml")
         print(soup.title.string)
         # 获取记录总数
-        soup.find_all('td', class_="pager_count_class")
-        str = soup.find_all('td', class_="pager_count_class")[0].get_text().strip()
+        tds = soup.find_all('td', class_="pager_count_class")
+        print("该 class 标签的数量： ", len(tds))
+        for td in tds:
+            print(td)
+        if len(tds) > 0:
+            str = tds[0].get_text().strip()
+        else:
+            str = re.match('>.*件', res.text)
+        print("str 内容：" + str)
         total = int(re.match('.+?(?=\件)', str).group(0))
         print('total:', total)
         # 获取总页数
