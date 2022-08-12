@@ -28,19 +28,11 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
         url = search_base.format(from_year,from_month,to_year,to_month,page)
         res = requests.get(url, verify=False)
         res.encoding = 'SHIFT_JIS'
-        soup = BeautifulSoup(res.text, features="lxml")
+        soup = BeautifulSoup(res.content, "html.parser")
         print(soup.title.string)
-        # 获取记录总数
-        tds = soup.find_all('td', class_="pager_count_class")
-        print("该 class 标签的数量： ", len(tds))
-        for td in tds:
-            print(td)
-        if len(tds) > 0:
-            str = tds[0].get_text().strip()
-        else:
-            str = re.match('>.*件', res.text)
-        print("str 内容：" + str)
-        total = int(re.match('.+?(?=\件)', str).group(0))
+        all_text = soup.select(".pager_class .pager_count_class")[0].text
+        total = re.findall(r'^\D*(\d+)', all_text)
+        total = (int)(total[0])
         print('total:', total)
         # 获取总页数
         if total % 100 == 0:
