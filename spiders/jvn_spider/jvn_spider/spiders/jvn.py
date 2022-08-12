@@ -50,8 +50,9 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
             res = requests.get(url, verify=False)
             # 指定编码方式(日文),否则会出现乱码
             res.encoding = 'SHIFT_JIS'
-            soup = BeautifulSoup(res.text, features="lxml")
-            for tr in soup.find('table', class_='result_class').find_all('tr'):
+            soup = BeautifulSoup(res.content, "html.parser")
+            tr_list = soup.select('table.result_class tr')
+            for tr in tr_list:
                 td = tr.find_all('td')
                 if len(td) > 0:
                     url = base + td[0].a['href']
