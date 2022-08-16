@@ -53,47 +53,60 @@ public class TFiotDao {
         return total;
     }
 
-
     //统计超危漏洞数量
     public Long getCriticalNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("超危"));
+        Criteria sql = new Criteria().orOperator(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("CRITICAL"),
+                                                 Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("超危"));
+        query.addCriteria(sql);
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计高危漏洞数量
     public Long getHighNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("高危"));
+        Criteria sql = new Criteria().orOperator(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("HIGH"),
+                                                 Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("高危"));
+        query.addCriteria(sql);
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计中危漏洞数量
     public Long getMediumNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("中危"));
+        Criteria sql = new Criteria().orOperator(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("MEDIUM"),
+                                                 Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("中危"));
+        query.addCriteria(sql);
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计低危漏洞数量
     public Long getLowNum() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("低危"));
+        Criteria sql = new Criteria().orOperator(Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("LOW"),
+                                                 Criteria.where("baseMetricV3.cvssV3.baseSeverity").is("低危"));
+        query.addCriteria(sql);
         return mongoTemplate.count(query,TFiot.class);
     }
     //统计高危漏洞
     public List<TFiot> getHighVuln() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("高危"));
+        Criteria sql = new Criteria().orOperator(Criteria.where("baseMetricV2.severity").is("HIGH"),
+                                                 Criteria.where("baseMetricV2.severity").is("高危"));
+        query.addCriteria(sql);
         return mongoTemplate.find(query,TFiot.class);
     }
     //统计中危漏洞
     public List<TFiot> getMediumVuln() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("中危"));
+        Criteria sql = new Criteria().orOperator(Criteria.where("baseMetricV2.severity").is("MEDIUM"),
+                                                 Criteria.where("baseMetricV2.severity").is("中危"));
+        query.addCriteria(sql);
         return mongoTemplate.find(query,TFiot.class);
     }
     //统计低危漏洞
     public List<TFiot> getLowVuln() {
         Query query = new Query();
-        query.addCriteria(Criteria.where("baseMetricV2.severity").is("低危"));
+        Criteria sql = new Criteria().orOperator(Criteria.where("baseMetricV2.severity").is("LOW"),
+                                                 Criteria.where("baseMetricV2.severity").is("低危"));
+        query.addCriteria(sql);
         return mongoTemplate.find(query,TFiot.class);
     }
 
@@ -290,31 +303,31 @@ public class TFiotDao {
         List<TFiot> vulns = mongoTemplate.findAll(TFiot.class);
         for (TFiot item: vulns) {
             for (String type : item.getType01()) {
-                if (type.equals("拒绝服务")) {
+                if (type.equals("拒绝服务") || type.equals("Denial Of Service")) {
                     doss ++ ;
-                } else if (type.equals("执行代码")) {
+                } else if (type.equals("执行代码") || type.equals("Execute Code")) {
                     execute ++;
-                } else if (type.equals("溢出")) {
+                } else if (type.equals("溢出") || type.equals("Overflow")) {
                     overflow ++;
-                } else if (type.equals("跨站脚本")) {
+                } else if (type.equals("跨站脚本") || type.equals("Cross Site Scripting")) {
                     xss ++;
-                } else if (type.equals("目录遍历")) {
+                } else if (type.equals("目录遍历") || type.equals("Directory traversal")) {
                     directory ++;
-                } else if (type.equals("绕过")) {
+                } else if (type.equals("绕过") || type.equals("Bypass a restriction or similar")) {
                     bypass ++;
-                } else if (type.equals("获取信息")) {
+                } else if (type.equals("获取信息") || type.equals("Obtain Information")) {
                     gain_infor ++;
-                } else if (type.equals("获取权限")) {
+                } else if (type.equals("获取权限") || type.equals("Gain privileges")) {
                     gain_privilege ++;
-                } else if (type.equals("SQL注入")) {
+                } else if (type.equals("SQL注入") || type.equals("Sql Injection")) {
                     sql ++;
-                } else if (type.equals("文件包含")) {
+                } else if (type.equals("文件包含") || type.equals("File Inclusion")) {
                     file_inclusion ++;
-                } else if (type.equals("内存错误")) {
+                } else if (type.equals("内存错误") || type.equals("Memory corruption")) {
                     memory ++;
-                } else if (type.equals("跨站请求伪造")) {
+                } else if (type.equals("跨站请求伪造") || type.equals("CSRF")) {
                     csrf ++;
-                } else if (type.equals("HTTP响应拆分")) {
+                } else if (type.equals("HTTP响应拆分") || type.equals("Http response splitting")) {
                     http ++;
                 } else {
                     none ++;

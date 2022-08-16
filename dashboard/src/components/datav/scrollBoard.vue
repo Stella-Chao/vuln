@@ -13,7 +13,7 @@ export default {
       // base_url: 'http://172.16.0.37:9090/dashboard/data03',
       base_url: 'http://127.0.0.1:9090/dashboard/data03',
       config: {
-        header: ['CVE-ID', '漏洞名称', '危险级别', '攻击类型', 'POC'],
+        header: ['CVE-ID', '漏洞名称', '危险级别', '攻击类型', '发布日期'],
         data: [],
         index: false,
         columnWidth: [50],
@@ -53,6 +53,38 @@ export default {
               security = "未知"
             }
             let type = result[i]["type01"][0]
+            if (type == "Denial Of Service") {
+              type = "拒绝服务"
+            } else if (type == "Execute Code") {
+              type = "执行代码"
+            } else if (type == "Overflow") {
+              type = "溢出"
+            } else if (type == "Cross Site Scripting") {
+              type = "跨站脚本"
+            } else if (type == "Directory traversal") {
+              type = "目录遍历"
+            } else if (type == "Bypass a restriction or similar") {
+              type = "绕过"
+            } else if (type == "Obtain Information") {
+              type = "获取信息"
+            } else if (type == "Gain privileges") {
+              type = "获取权限"
+            } else if (type == "Sql Injection") {
+              type = "SQL注入"
+            } else if (type == "File Inclusion") {
+              type = "文件包含"
+            } else if (type == "Memory corruption") {
+              type = "内存错误"
+            } else if (type == "CSRF") {
+              type = "跨站请求伪造"
+            } else if (type == "Http response splitting") {
+              type = "HTTP响应拆分"
+            } else if (type == "None") {
+              type = "未知"
+            }
+            if (title == "请查看详情") {
+              continue
+            }
             let published = result[i]["publishedDate"]
             arrlist.push(cve_id)
             arrlist.push(title)

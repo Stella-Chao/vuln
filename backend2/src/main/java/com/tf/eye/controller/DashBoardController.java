@@ -1,6 +1,7 @@
 package com.tf.eye.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tf.eye.repository.mongo.PocDao;
 import com.tf.eye.repository.mongo.TFiotDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,9 @@ public class DashBoardController {
     @Autowired
     TFiotDao iotDao;
 
+    @Autowired
+    PocDao pocDao;
+
     @GetMapping("/data01")
     /* 返回大屏顶部显示的数据 */
     public String getScreenData01() {
@@ -26,7 +30,7 @@ public class DashBoardController {
         dashboard.put("高危漏洞",iotDao.getHighNum());
         dashboard.put("中危漏洞",iotDao.getMediumNum());
         dashboard.put("低危漏洞",iotDao.getLowNum());
-        dashboard.put("POC数量",iotDao.getPocNum());
+        dashboard.put("POC数量",pocDao.getPocNum());
         dashboard.put("当日新增",iotDao.getTodayNum());
         dashboard.put("近一周新增数量",iotDao.getWeekNum());
         dashboard.put("近一月新增数量",iotDao.getMonthNum());
