@@ -32,9 +32,9 @@ export default {
   methods: {
     createData () {
       const { randomExtend } = this
-      axios.get('http://127.0.0.1:9090/dashboard/data01')
-      // axios.get('http://172.16.0.37:9090/dashboard/data01')
+      axios.get('http://api.eye.tf.lab/eye/dashboard/data01')
         .then(res=>{
+          console.log(res.data)
           this.result = res.data
           this.digitalFlopData = [
             {
