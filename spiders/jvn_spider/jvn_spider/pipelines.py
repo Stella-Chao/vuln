@@ -1,5 +1,5 @@
 import pymongo
-from jvn_spider.settings import MONGODB_PORT, MONGODB_HOST, MONGODB_DBNAME, MONGODB_COLLECTION
+from jvn_spider.settings import MONGODB_PORT, MONGODB_HOST, MONGODB_DBNAME, MONGODB_COLLECTION, MONGO_URI
 
 class JvnSpiderPipeline:
 
@@ -9,7 +9,7 @@ class JvnSpiderPipeline:
         database = MONGODB_DBNAME
         collection = MONGODB_COLLECTION
         # 创建 mongos数据库连接
-        client = pymongo.MongoClient(host=host, port=port)
+        client = pymongo.MongoClient(MONGO_URI)
         # 指定数据库
         mydb = client[database]
         # 集合
