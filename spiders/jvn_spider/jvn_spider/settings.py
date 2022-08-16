@@ -115,7 +115,7 @@ MONGODB_COLLECTION = "jvndb2"
 MONGO_USER = "tf"
 MONGO_PSW = "wn3e8d4d"
 # MONGO_URI = 'mongodb://tf:vuln@10.0.3.37:27017/authMechanism?authSource=vuln'
-MONGO_URI = 'mongodb://tf:vuln@127.0.0.1:27017/authMechanism?authSource=vuln'
+MONGO_URI = 'mongodb://tf:wn3e8d4d@127.0.0.1:27017/authMechanism=DEFAULT?authSource=vuln'
 EXTENSIONS = {
    'scrapy.telnet.TelnetConsole': None
 }
