@@ -120,7 +120,7 @@ export default {
 
     createData()
 
-    setInterval(this.createData, 6000)
+    setInterval(this.createData, 3000)
   }
 }
 </script>
