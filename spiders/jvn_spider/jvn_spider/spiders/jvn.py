@@ -31,9 +31,12 @@ class JVNSpider(scrapy_redis.spiders.RedisSpider):
                 res.encoding = 'SHIFT_JIS'
                 soup = BeautifulSoup(res.content, "html.parser")
                 print(soup.title.string)
-                all_text = soup.select(".pager_class .pager_count_class")[0].text
-                total = re.findall(r'^\D*(\d+)', all_text)
-                total = (int)(total[0])
+                try:
+                    all_text = soup.select(".pager_class .pager_count_class")[0].text
+                    total = re.findall(r'^\D*(\d+)', all_text)
+                    total = (int)(total[0])
+                except:
+                    continue
                 print('total:', total)
                 # 获取总页数
                 if total % 100 == 0:
