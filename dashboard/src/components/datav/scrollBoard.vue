@@ -1,6 +1,6 @@
 <template>
   <div id="scroll-board">
-    <dv-scroll-board :config="config" @click="hover"/>
+    <dv-scroll-board :config="config"/>
   </div>
 </template>
 
@@ -111,9 +111,6 @@ export default {
             evenRowBGC: 'rgba(10, 29, 50, 0.8)'
           }
         });
-    },
-    hover() {
-      alert("hello")
     }
   },
   mounted () {
