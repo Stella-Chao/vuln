@@ -103,18 +103,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-# MONGODB 主机名
-MONGODB_HOST = "10.0.3.37"
-# MONGODB_HOST = "127.0.0.1"
-# MONGODB 端口号
-MONGODB_PORT = 27017
-# 数据库名称
-MONGODB_DBNAME = "vuln"
-# 存放数据的表名称
-MONGODB_COLLECTION = "jvndb2"
-MONGO_USER = "tf"
-MONGO_PSW = "wn3e8d4d"
-MONGO_URI = 'mongodb://tf:vuln@10.0.3.37:27017/jvndb2?authSource=vuln'
+MONGO_URI = 'mongodb://tf:wn3e8d4d@127.0.0.1:27017/jvndb2?authMechanism=DEFAULT&authSource=vuln'
 
 EXTENSIONS = {
    'scrapy.telnet.TelnetConsole': None
