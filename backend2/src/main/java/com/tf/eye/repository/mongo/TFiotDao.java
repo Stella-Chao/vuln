@@ -229,12 +229,12 @@ public class TFiotDao {
         json.put("type","智能家居类");
         json.put("总数",0);
         json.put("高危",0);
-//        Query query1 = new Query();
-//        query1.addCriteria(Criteria.where("Type02").is("smart"));
-//        json.put("总数",mongoTemplate.count(query1,TFiot.class));
-//        Query query2 = new Query();
-//        query2.addCriteria(Criteria.where("Type02").is("smart").and("baseMetricV2.severity").is("HIGH"));
-//        json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        Query query1 = new Query();
+        query1.addCriteria(Criteria.where("Type02").is("smart"));
+        json.put("总数",mongoTemplate.count(query1,TFiot.class));
+        Query query2 = new Query();
+        query2.addCriteria(Criteria.where("Type02").is("smart").and("baseMetricV2.severity").is("HIGH"));
+        json.put("高危",mongoTemplate.count(query2,TFiot.class));
         return json;
     }
     //获取工业控制类漏洞数量
@@ -243,12 +243,12 @@ public class TFiotDao {
         json.put("type","工业控制类");
         json.put("总数",0);
         json.put("高危",0);
-//        Query query1 = new Query();
-//        query1.addCriteria(Criteria.where("Type02").is("ics"));
-//        json.put("总数",mongoTemplate.count(query1,TFiot.class));
-//        Query query2 = new Query();
-//        query2.addCriteria(Criteria.where("Type02").is("ics").and("baseMetricV2.severity").is("HIGH"));
-//        json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        Query query1 = new Query();
+        query1.addCriteria(Criteria.where("Type02").is("ics"));
+        json.put("总数",mongoTemplate.count(query1,TFiot.class));
+        Query query2 = new Query();
+        query2.addCriteria(Criteria.where("Type02").is("ics").and("baseMetricV2.severity").is("HIGH"));
+        json.put("高危",mongoTemplate.count(query2,TFiot.class));
         return json;
     }
 
@@ -258,12 +258,12 @@ public class TFiotDao {
         json.put("type","移动设备类");
         json.put("总数",0);
         json.put("高危",0);
-//        Query query1 = new Query();
-//        query1.addCriteria(Criteria.where("Type02").is("mobile"));
-//        json.put("总数",mongoTemplate.count(query1,TFiot.class));
-//        Query query2 = new Query();
-//        query2.addCriteria(Criteria.where("Type02").is("mobile").and("baseMetricV2.severity").is("HIGH"));
-//        json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        Query query1 = new Query();
+        query1.addCriteria(Criteria.where("Type02").is("mobile"));
+        json.put("总数",mongoTemplate.count(query1,TFiot.class));
+        Query query2 = new Query();
+        query2.addCriteria(Criteria.where("Type02").is("mobile").and("baseMetricV2.severity").is("HIGH"));
+        json.put("高危",mongoTemplate.count(query2,TFiot.class));
         return json;
     }
 
@@ -273,12 +273,12 @@ public class TFiotDao {
         json.put("type","待定类别");
         json.put("总数",0);
         json.put("高危",0);
-//        Query query1 = new Query();
-//        query1.addCriteria(Criteria.where("Type02").is("plat"));
-//        json.put("总数",mongoTemplate.count(query1,TFiot.class));
-//        Query query2 = new Query();
-//        query2.addCriteria(Criteria.where("Type02").is("plat").and("baseMetricV2.severity").is("HIGH"));
-//        json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        Query query1 = new Query();
+        query1.addCriteria(Criteria.where("Type02").is("plat"));
+        json.put("总数",mongoTemplate.count(query1,TFiot.class));
+        Query query2 = new Query();
+        query2.addCriteria(Criteria.where("Type02").is("plat").and("baseMetricV2.severity").is("HIGH"));
+        json.put("高危",mongoTemplate.count(query2,TFiot.class));
         return json;
     }
 
