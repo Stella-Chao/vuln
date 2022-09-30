@@ -1,6 +1,8 @@
 package com.tf.eye.repository.mongo;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tf.eye.model.domain.Device;
+import com.tf.eye.model.domain.TFiot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -9,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Repository
 public class DeviceDao {
@@ -34,6 +37,20 @@ public class DeviceDao {
 //        System.out.println("查询总数: " + total);
         query.skip((page - 1) * size).limit(size);
         return mongoTemplate.find(query, Device.class);
+    }
+
+    //统计指定厂商数量
+    public Long getBrandNumByName(String brand) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("brand").is(brand));
+        return mongoTemplate.count(query, TFiot.class);
+    }
+
+    //统计指定设备数量
+    public Long getDeviceNumByName(String product) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("product").is(product));
+        return mongoTemplate.count(query, TFiot.class);
     }
 
     //通过设备名查询
@@ -77,6 +94,7 @@ public class DeviceDao {
         update.set("range", device.getRange());
         update.set("brand_cn", device.getBrandCN());
         update.set("brand_alias", device.getBrandAlias());
+        System.out.println(device);
         return mongoTemplate.findAndModify(query, update, Device.class);
     }
 
@@ -88,6 +106,26 @@ public class DeviceDao {
         Query query = new Query();
         query.addCriteria(Criteria.where("product").is(product));
         mongoTemplate.findAndRemove(query, Device.class);
+    }
+
+    //多条件查询
+    public String findByMulti(String brand, String product, Integer size, Integer page) {
+        Query query = new Query();
+        JSONObject json = new JSONObject();
+        System.out.println(size + " " + page);
+        if (!brand.equals("")) {
+            query.addCriteria(Criteria.where("brand").is(brand));
+        }
+        if (!product.equals("")) {
+            query.addCriteria(Criteria.where("product").is(product));
+        }
+        System.out.println(query);
+        Long total = mongoTemplate.count(query, Device.class);
+        System.out.println(total);
+        query.skip((page - 1) * size).limit(size);
+        json.put("total", total);
+        json.put("result", mongoTemplate.find(query,Device.class));
+        return json.toJSONString();
     }
 }
 

@@ -44,7 +44,7 @@ def baidu_translate(query, from_lang, to_lang):
 
 
 
-def translate(query, from_lang, to_lang):
+def translate(query):
     try:
         # 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey,此处还需注意密钥对的保密
         # 密钥可前往https://console.cloud.tencent.com/cam/capi网站进行获取
@@ -63,8 +63,8 @@ def translate(query, from_lang, to_lang):
         req = models.TextTranslateRequest()
         params = {
             "SourceText": query,
-            "Source": from_lang,
-            "Target": to_lang,
+            "Source": "auto",
+            "Target": "zh",
             "ProjectId": 1
         }
         req.from_json_string(json.dumps(params))

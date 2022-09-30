@@ -11,6 +11,7 @@ export default {
   data () {
     return {
       base_url: 'http://api.eye.tf.lab/eye/dashboard/data03',
+      // base_url: 'http://127.0.0.1:9090/dashboard/data03',
       config: {
         header: ['CVE-ID', '漏洞名称', '危险级别', '攻击类型', '发布日期'],
         data: [],

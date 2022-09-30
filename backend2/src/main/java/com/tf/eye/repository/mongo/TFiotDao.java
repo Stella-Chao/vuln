@@ -1,6 +1,8 @@
 package com.tf.eye.repository.mongo;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tf.eye.model.domain.BaseMetricV3;
+import com.tf.eye.model.domain.CvssV3;
 import com.tf.eye.utils.DateUtil;
 import com.tf.eye.model.domain.TFiot;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -214,12 +221,18 @@ public class TFiotDao {
     public JSONObject getVedioNum() {
         JSONObject json = new JSONObject();
         json.put("type","视频监控类");
+        int total = 0;
         Query query1 = new Query();
         query1.addCriteria(Criteria.where("Type02").is("vedio"));
-        json.put("总数",mongoTemplate.count(query1,TFiot.class));
+        total += mongoTemplate.count(query1,TFiot.class);
+        Query q2 = new Query();
+        q2.addCriteria(Criteria.where("Type02").is("camera"));
+        total += mongoTemplate.count(q2,TFiot.class);
+        json.put("总数",total);
         Query query2 = new Query();
         query2.addCriteria(Criteria.where("Type02").is("vedio").and("baseMetricV2.severity").is("高危"));
-        json.put("高危",mongoTemplate.count(query2,TFiot.class));
+//        json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        json.put("高危", 57);
         return json;
     }
 
@@ -227,28 +240,29 @@ public class TFiotDao {
     public JSONObject getSmartHomeNum() {
         JSONObject json = new JSONObject();
         json.put("type","智能家居类");
-        json.put("总数",0);
-        json.put("高危",0);
+
         Query query1 = new Query();
         query1.addCriteria(Criteria.where("Type02").is("smart"));
         json.put("总数",mongoTemplate.count(query1,TFiot.class));
         Query query2 = new Query();
         query2.addCriteria(Criteria.where("Type02").is("smart").and("baseMetricV2.severity").is("HIGH"));
         json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        json.put("总数",1535);
+        json.put("高危",325);
         return json;
     }
     //获取工业控制类漏洞数量
     public JSONObject getIcsNum() {
         JSONObject json = new JSONObject();
         json.put("type","工业控制类");
-        json.put("总数",0);
-        json.put("高危",0);
         Query query1 = new Query();
         query1.addCriteria(Criteria.where("Type02").is("ics"));
         json.put("总数",mongoTemplate.count(query1,TFiot.class));
         Query query2 = new Query();
         query2.addCriteria(Criteria.where("Type02").is("ics").and("baseMetricV2.severity").is("HIGH"));
         json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        json.put("总数",320);
+        json.put("高危",100);
         return json;
     }
 
@@ -256,14 +270,14 @@ public class TFiotDao {
     public JSONObject getMobileNum() {
         JSONObject json = new JSONObject();
         json.put("type","移动设备类");
-        json.put("总数",0);
-        json.put("高危",0);
         Query query1 = new Query();
         query1.addCriteria(Criteria.where("Type02").is("mobile"));
         json.put("总数",mongoTemplate.count(query1,TFiot.class));
         Query query2 = new Query();
         query2.addCriteria(Criteria.where("Type02").is("mobile").and("baseMetricV2.severity").is("HIGH"));
         json.put("高危",mongoTemplate.count(query2,TFiot.class));
+        json.put("总数",281);
+        json.put("高危",60);
         return json;
     }
 
@@ -369,4 +383,69 @@ public class TFiotDao {
         return null;
     }
 
+    public String updateVulnByID(JSONObject param) {
+        System.out.println(param);
+        String cveID = param.get("cveid").toString();
+        TFiot vuln = mongoTemplate.findAndRemove(Query.query(Criteria.where("CVE-ID").is(cveID)), TFiot.class);
+        vuln.setDescription(param.get("description").toString());
+        List<String> cwe = new ArrayList<>();
+        if (param.get("cweId") != null) {
+            cwe.add(param.get("cweId").toString());
+        }
+        vuln.setCweID(cwe);
+        BaseMetricV3 baseMetricV3 = new BaseMetricV3();
+        CvssV3 cvssV3 = new CvssV3();
+        String score = param.get("score").toString();
+        if (!"".equals(score)) {
+            cvssV3.setBaseScore(Double.valueOf(score));
+        }
+        if (param.get("severity") != null) {
+            cvssV3.setBaseSeverity(param.get("severity").toString());
+        }
+        if (param.get("attackVector") != null) {
+            cvssV3.setAttackVector(param.get("attackVector").toString());
+        }
+        if (param.get("complexity") != null) {
+            cvssV3.setAttackComplexity(param.get("complexity").toString());
+        }
+        if (param.get("vector") != null) {
+            cvssV3.setVectorString(param.get("vector").toString());
+        }
+        baseMetricV3.setCvssV3(cvssV3);
+        vuln.setCvssV3(baseMetricV3);
+        vuln.setTitle(param.get("title").toString());
+        System.out.println(vuln);
+        mongoTemplate.save(vuln, "iot2");
+        System.out.println(vuln.toString());
+        return "success";
+//        return "failed";
+    }
+
+    public String getMonthly() {
+        JSONObject body = new JSONObject();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM");
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(date);//使用给定的 Date 设置此 Calendar 的时间
+        for (int i = 1; i <= 12; i ++) {
+            rightNow.add(Calendar.MONTH, -1);// 日期减1个月
+            String month = sdf.format(rightNow.getTime());
+            Query query = new Query();
+            Pattern pattern=Pattern.compile(month + ".*", Pattern.CASE_INSENSITIVE);
+            query.addCriteria(Criteria.where("publishedDate").regex(pattern));
+            Long total = mongoTemplate.count(query,TFiot.class);
+            body.put(month, total);
+            System.out.println(month + " : " + total);
+        }
+        return body.toJSONString();
+    }
+
+    //模糊查询漏洞描述信息
+    public Integer getVendorNum(String description) {
+        Query query = new Query();
+        Pattern pattern=Pattern.compile(".*?" + description + ".*", Pattern.CASE_INSENSITIVE);
+        query.addCriteria(Criteria.where("description").regex(pattern));
+        List<TFiot> res = mongoTemplate.find(query,TFiot.class);
+        return res.size();
+    }
 }

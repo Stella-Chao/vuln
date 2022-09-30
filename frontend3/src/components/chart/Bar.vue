@@ -14,12 +14,10 @@
 <script>
 
 const data = []
-for (let i = 0; i < 12; i += 1) {
-  data.push({
-    x: `${i + 1}月`,
-    y: Math.floor(Math.random() * 1000) + 200
-  })
-}
+import axios from 'axios'
+const base_url = process.env.VUE_APP_API_BASE_URL
+
+
 const tooltip = [
   'x*y',
   (x, y) => ({
@@ -45,6 +43,25 @@ export default {
       data,
       scale,
       tooltip
+    }
+  },
+  created(){
+    this.getRecent();
+  },
+  methods: {
+    getRecent() {
+      axios.get(base_url + '/tf/get/month').then(res=>{
+        var newData = Object.keys(res.data).sort();
+        console.log('12月：',newData)
+        for (let key in newData) {
+          let time = newData[key]
+          console.log(res.data[time])
+          this.data.push({
+            x: `${time}`,
+            y: res.data[time]
+          })
+        }
+      })
     }
   }
 }

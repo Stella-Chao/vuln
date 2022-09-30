@@ -4,14 +4,12 @@
       <a-col style="padding: 0 34px; margin-bottom: 24px" :sm="12" :xs="24">
         <div class="num-info">
           <span class="title">
-            {{$t('search')}}
-            <a-tooltip :title="$t('introduce')">
-              <a-icon type="info-circle" style="font-size: 14px; margin-left: 8px" />
+            IoT漏洞总数
+            <a-tooltip title="IoT漏洞总数">
             </a-tooltip>
           </span>
           <div class="value">
-            <span class="total">12321</span>
-            <span class="subtotal">71.2<a-icon type="caret-up" /></span>
+            <span class="total">{{ total }}</span>
           </div>
         </div>
         <mini-area style="height: 45px" />
@@ -19,14 +17,12 @@
       <a-col style="padding: 0 34px; margin-bottom: 24px" :sm="12" :xs="24">
         <div class="num-info">
           <span class="title">
-            {{$t('capita')}}
-            <a-tooltip :title="$t('introduce')">
-              <a-icon type="info-circle" style="font-size: 14px; margin-left: 8px" />
+            PoC总数
+            <a-tooltip title="PoC总数">
             </a-tooltip>
           </span>
           <div class="value">
-            <span class="total">2.7</span>
-            <span class="subtotal">71.2<a-icon type="caret-down" /></span>
+            <span class="total">{{ poc }}</span>
           </div>
         </div>
         <mini-area style="height: 45px" />
@@ -48,37 +44,30 @@
 <script>
 import MiniArea from '../../../components/chart/MiniArea'
 
+import axios from 'axios'
+const base_url = process.env.VUE_APP_API_BASE_URL
+
 const searchData = []
-for (let i = 0; i < 50; i++) {
-  searchData.push({
-    index: i + 1,
-    keyword: '关键词-' + i,
-    count: Math.floor(Math.random() * 1000),
-    range: Math.floor(Math.random() * 100),
-    status: Math.floor((Math.random() * 10) % 2)
-  })
-}
+// for (let i = 0; i < 5; i++) {
+//   searchData.push({
+//     index: i + 1,
+//     keyword: '关键词-' + i,
+//     count: Math.floor(Math.random() * 1000)
+//   })
+// }
 
 const columns = [
   {
     dataIndex: 'index',
-    key: 'rank'
+    key: '编号'
   },
   {
     dataIndex: 'keyword',
-    key: 'keyword',
-    scopedSlots: {customRender: 'keyword'}
+    key: "漏洞类型"
   },
   {
     dataIndex: 'count',
-    key: 'users',
-    sorter: (a, b) => a.count - b.count
-  },
-  {
-    title: '周涨幅',
-    dataIndex: 'range',
-    key: 'range',
-    scopedSlots: {customRender: 'rang'}
+    key: "数量"
   }
 ]
 
@@ -89,7 +78,9 @@ export default {
   data () {
     return {
       searchData,
-      columns
+      columns,
+      total: "",
+      poc:""
     }
   },
   computed: {
@@ -98,6 +89,35 @@ export default {
       return columns.map(item => {
        item.title = this.$t(item.key)
         return item
+      })
+    }
+  },
+  created() {
+    this.getData()
+  },
+  methods: {
+    getData() {
+      axios.get(base_url + '/tf/get/count').then(res=>{
+        console.log('漏洞总数量：',res.data)
+        this.total = res.data
+      })
+      axios.get(base_url + '/poc/get/pocNum').then(res=>{
+        console.log('Poc 总数量：',res.data)
+        this.poc = res.data
+      })
+      axios.get(base_url + '/dashboard/data02')
+      .then(res=>{
+        console.log(res.data)
+        this.result = JSON.parse(res.data['CVE类别'])
+        console.log(this.result)
+        let idx = 1
+        for (let key in this.result) {
+          searchData.push({
+          index: idx ++,
+          keyword: key,
+          count: this.result[key]
+        })
+        }
       })
     }
   }

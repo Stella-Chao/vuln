@@ -1,7 +1,5 @@
-package com.tf.eye.model.domain;
+package com.tf.eye.model.domain.cve;
 
-import com.tf.eye.model.domain.cve.Configurations;
-import com.tf.eye.model.domain.cve.Impact;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -14,7 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @Document(collection = "nvd01")
-public class NVD01 implements Serializable {
+public class NVD implements Serializable {
 
     private static final long serialVersionUID = -1157207322902031916L;
 

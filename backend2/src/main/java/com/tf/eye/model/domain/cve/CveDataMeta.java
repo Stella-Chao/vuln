@@ -1,4 +1,4 @@
-package com.tf.eye.model.domain;
+package com.tf.eye.model.domain.cve;
 
 import lombok.Data;
 
@@ -13,5 +13,7 @@ public class CveDataMeta implements Serializable {
 
     private static final long serialVersionUID = 7759075771081158767L;
 
+    String ID;
 
+    String ASSIGNER;
 }

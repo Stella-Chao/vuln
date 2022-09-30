@@ -18,6 +18,7 @@ export default {
   methods: {
     createData() {
       axios.get('http://api.eye.tf.lab/eye/dashboard/data02')
+      // axios.get('http://127.0.0.1:9090/dashboard/data02')
         .then(res=>{
           console.log(res.data)
           this.result = JSON.parse(res.data['CVE类别'])

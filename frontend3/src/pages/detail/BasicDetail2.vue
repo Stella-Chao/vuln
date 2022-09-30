@@ -56,7 +56,7 @@
         <a-divider style="margin-bottom: 32px"/>
         <detail-list title="POC">
           <detail-list-item term="点击下载">
-            <a>{{ vuln["poc"] }}</a>
+            <a>{{ code_url }}</a>
             </detail-list-item>
         </detail-list>
         <a-divider style="margin-bottom: 32px"/>
@@ -75,7 +75,6 @@ import PageLayout from '../../layouts/PageLayout'
 import Graph from '../kg/Graph'
 import axios from 'axios'
 const base_url = process.env.VUE_APP_API_BASE_URL
-// const base_url = 'http://api.eye.tf.lab/eye'
 const DetailListItem = DetailList.Item
 
 const cpeColumns = [
@@ -163,7 +162,7 @@ export default {
   },
   methods: {
     getVulnDetail(id) {
-      axios.get(this.base_url + '/tf/cve?cveID=' + id)
+      axios.get(this.base_url + '/cve/cve?cveID=' + id)
         .then(res=>{
           this.vuln = res.data
           console.log(this.vuln)
@@ -171,14 +170,12 @@ export default {
           this.linkData = this.vuln.refer
           console.log("cvssV2:", this.vuln["cvssV2"])
           console.log("cvssV3:", this.vuln["cvssV3"])
-          if (this.vuln["cvssV2"] !== null) {
-            this.baseScore = this.vuln["cvssV2"]["cvssV2"]["baseScore"]
-            this.baseSeverity = this.vuln["cvssV2"]["severity"]
-            this.attackComplexity = this.vuln["cvssV2"]["cvssV2"]["accessComplexity"]
-            this.attackVector = this.vuln["cvssV2"]["cvssV2"]["accessVector"]
-            this.cvss_vector = this.vuln["cvssV2"]["cvssV2"]["vectorString"]
-          }
-          if (this.vuln["cvssV3"] !== null) {
+          this.baseScore = this.vuln["cvssV2"]["cvssV2"]["baseScore"]
+          this.baseSeverity = this.vuln["cvssV2"]["severity"]
+          this.attackComplexity = this.vuln["cvssV2"]["cvssV2"]["accessComplexity"]
+          this.attackVector = this.vuln["cvssV2"]["cvssV2"]["accessVector"]
+          this.cvss_vector = this.vuln["cvssV2"]["cvssV2"]["vectorString"]
+          if ("cvssV3" in this.vuln && this.vuln["cvssV3"] !== null) {
             this.cvss3_url = "https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector="+this.vuln["cvssV3"]["cvssV3"]["vectorString"].substring(9)+"&version=3.1"
             this.baseScore = this.vuln["cvssV3"]["cvssV3"]["baseScore"]
             this.baseSeverity = this.vuln["cvssV3"]["cvssV3"]["baseSeverity"]
@@ -192,7 +189,6 @@ export default {
           console.log(this.attackComplexity)
           console.log(this.attackVector)
           this.cwe_url = ""
-          this.poc = this.vuln.poc
           if (this.vuln["cweID"].length > 0) {
             this.cwe_url = "https://cwe.mitre.org/data/definitions/" + this.vuln["cweID"][0].substring(4) + ".html"
           }
@@ -219,11 +215,25 @@ export default {
           }
         })
     },
-
+    getPoc(id) {
+      axios.get(this.base_url + 'poc/get?cveID=' + id.substring(4))
+        .then(res=>{
+          // console.log(res.data)
+          // this.poc = res.data
+          // if (res.data === "") {
+          //   this.poc = '暂无POC'
+          // }
+          console.log('hello,world!')
+          console.log(id.substring(4))
+          this.code_url = res.data["codeUrl"]
+          console.log(res.data["codeUrl"])
+        })
+    }
   },
   created(){
     let id =  this.$route.query["id"]
     this.getVulnDetail(id)
+    this.getPoc(id)
   }
 }
 </script>

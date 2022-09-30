@@ -2,10 +2,12 @@ package com.tf.eye.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tf.eye.model.domain.Device;
+import com.tf.eye.model.domain.TFiot;
 import com.tf.eye.repository.mongo.DeviceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,6 +41,12 @@ public class DeviceController {
         return "删除成功！";
     }
 
+    @GetMapping("search")
+    public String search(String brand, String product, Integer size, Integer page) {
+        return deviceDao.findByMulti(brand, product, size, page);
+    }
+
+
     /**
      * 设备信息修改
      * @param param
@@ -51,15 +59,30 @@ public class DeviceController {
         String product = param.get("product").toString();
         Device device = deviceDao.getDeviceByProduct(product);
         device.setBrand(param.get("brand").toString());
-        device.setVerify(param.get("verify").toString());
-        device.setType1(param.get("type1").toString());
-        device.setType2(param.get("type2").toString());
-        device.setVulns(param.get("vulns").toString());
-        device.setIotBrandRel(param.get("iot_brand_rel").toString());
-        device.setRange(param.get("range").toString());
-        device.setRange(param.get("range").toString());
-        device.setBrandCN(param.get("brand_cn").toString());
-        device.setBrandAlias(param.get("brand_alias").toString());
+        if (param.get("verify") != null) {
+            device.setVerify(param.get("verify").toString());
+        }
+        if (param.get("type1") != null) {
+            device.setType1(param.get("type1").toString());
+        }
+        if (param.get("type2") != null) {
+            device.setType2(param.get("type2").toString());
+        }
+        if (param.get("vulns") != null) {
+            device.setVulns(param.get("vulns").toString());
+        }
+        if (param.get("iotBrandRel") != null) {
+            device.setIotBrandRel(param.get("iotBrandRel").toString());
+        }
+        if (param.get("range") != null) {
+            device.setRange(param.get("range").toString());
+        }
+        if (param.get("brandCN") != null) {
+            device.setBrandCN(param.get("brandCN").toString());
+        }
+        if (param.get("brandAlias") != null) {
+            device.setBrandAlias(param.get("brandAlias").toString());
+        }
         deviceDao.update(device);
         return "修改成功!";
     }

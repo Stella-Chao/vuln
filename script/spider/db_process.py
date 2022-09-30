@@ -2,10 +2,11 @@
 import time
 import sys
 import re
+import json
 sys.path.append("..")
 from spider_utils import random_sleep
 from mongoUtils import connect_iot2,connect_iot,connect_jvndb2,connect_exploit,connect_nvd01
-from translate import translate
+# from translate import translate
 
 # 从 nvd(collection) 中抽取出 IOT(collection)
 def nvd2iot():
@@ -53,7 +54,7 @@ def convert():
         vuln["title"] = "请查看详情"
         iot2.insert_one(vuln)
 
-def translate_title():
+def add_jvn_title():
     iot = connect_iot2()
     jvn = connect_jvndb2()
     for item in iot.find():
@@ -61,36 +62,25 @@ def translate_title():
         if item["title"] == "请查看详情":
             jvn_vuln = list(jvn.find({"cve":id}))
             if len(jvn_vuln) > 0:
-                title = jvn_vuln[0]["title"]
-                time.sleep(1)
-                random_sleep()
-                try:
-                    new_title = translate(title, 'jp', 'zh')
-                except:
-                    continue
-                print(id, " => ", new_title)
-            else:
-                new_title = "请查看详情"
-            iot.update_one({"CVE-ID": id}, {"$set": {"title": new_title}})
+                new_title = jvn_vuln[0]["title"]
+                print(id, ":", new_title)
+                iot.update_one({"CVE-ID": id}, {"$set": {"title": new_title}})
 
-def translate_title2():
+def add_description_title():
     iot = connect_iot2()
     for item in iot.find():
         id = item["CVE-ID"]
-        title = item["title"]
-        if title != "请查看详情":
-            time.sleep(1)
-            random_sleep()
-            new_title = translate(title, 'en', 'zh')
-            print(id, " => ", new_title)
+        if item["title"] == "请查看详情":
+            des = item["description"]
+            new_title = des.split(".")[0]
+            print(id, ":", new_title)
             iot.update_one({"CVE-ID": id}, {"$set": {"title": new_title}})
-
 
 '''
 使用 references中的 name作为 title
 更改日期格式: 2021-10-06T20:15Z = > 2021-10-06
 '''
-def title2():
+def add_reference_title():
     iot = connect_iot2()
     for item in iot.find():
         id = item["CVE-ID"]
@@ -107,6 +97,29 @@ def title2():
                     title = " ".join(name.split()[1:])
                     print(title)
         iot.update_one({"CVE-ID": id}, {"$set": {"title": title, "publishedDate": published, "lastModifiedDate": modified}})
+
+# def translate_title():
+#     iot = connect_iot2()
+#     for item in iot.find():
+#         id = item["CVE-ID"]
+#         title = item["title"]
+#         flag = item["Type03"]
+#         if flag != "1":
+#             random_sleep()
+#             new_title = translate(title)["TargetText"]
+#             print(id, " => ", new_title)
+#             iot.update_one({"CVE-ID": id}, {"$set": {"title": new_title, "Type03": "1"}})
+
+def converse():
+    iot = connect_iot2()
+    for item in iot.find():
+        id = item["CVE-ID"]
+        title = item["title"]
+        flag = item["Type03"]
+        if flag == "1" and title is not None:
+            new_title = json.loads(title)["TargetText"]
+            print(id, " => ", new_title)
+            iot.update_one({"CVE-ID": id}, {"$set": {"title": new_title, "Type03": "1"}})
 
 def tranlate_type01():
     iot1 = connect_iot()
@@ -182,22 +195,62 @@ def convert_cvssv3_attacker():
             count += 1
     print(count)
 
-def translate_description():
+'''将cvssV2改为中文'''
+def translate_CvssV2():
     iot = connect_iot2()
     for item in iot.find():
         id = item["CVE-ID"]
-        description = item["description"]
-        flag = item["Type04"]
-        if flag == "1":
-            continue    # 表示已翻译过
-        time.sleep(1)
-        random_sleep()
-        try:
-            new_desc = translate(description, 'en', 'zh')
-        except:
-            continue
-        print(id, " => ", new_desc)
-        iot.update_one({"CVE-ID": id}, {"$set": {"description": new_desc, "Type04": "1"}})
+        if "baseMetricV2" in item:
+            baseMetricV2 = item["baseMetricV2"]
+            if "severity" in baseMetricV2:
+                severity = baseMetricV2["severity"]
+                if severity == "CRITICAL":
+                    item["baseMetricV2"]["severity"] = "超危"
+                if severity == "HIGH":
+                    item["baseMetricV2"]["severity"] = "高危"
+                if severity == "MEDIUM":
+                    item["baseMetricV2"]["severity"] = "中危"
+                if severity == "LOW":
+                    item["baseMetricV2"]["severity"] = "低危"
+            if "cvssV2" in baseMetricV2:
+                cvssV2 = baseMetricV2["cvssV2"]
+                vector = cvssV2["accessVector"]
+                if vector == "NETWORK":
+                    item["baseMetricV2"]["cvssV2"]["accessVector"] = "网络"
+                elif vector == "LOCAL":
+                    item["baseMetricV2"]["cvssV2"]["accessVector"] = "本地"
+                elif vector == "PHYSICAL":
+                    item["baseMetricV2"]["cvssV2"]["accessVector"] = "物理"
+                else:
+                    item["baseMetricV2"]["cvssV2"]["accessVector"] = "邻接"
+
+                # complexity = cvssV2["accessComplexity"]
+                # if complexity == "NETWORK":
+                #     item["baseMetricV2"]["cvssV2"]["accessVector"] = "网络"
+                # elif complexity == "LOCAL":
+                #     item["baseMetricV2"]["cvssV2"]["accessVector"] = "本地"
+                # else:
+                #     item["baseMetricV2"]["cvssV2"]["accessVector"] = "物理"
+            print(item["baseMetricV2"])
+            iot.update_one({"CVE-ID": id}, {"$set": {"baseMetricV2": item["baseMetricV2"]}})
+
+
+# def translate_description():
+#     iot = connect_iot2()
+#     for item in iot.find():
+#         id = item["CVE-ID"]
+#         description = item["description"]
+#         flag = item["Type04"]
+#         if flag == "1":
+#             continue    # 表示已翻译过
+#         time.sleep(1)
+#         random_sleep()
+#         try:
+#             new_desc = translate(description)
+#         except:
+#             continue
+#         print(id, " => ", new_desc)
+#         iot.update_one({"CVE-ID": id}, {"$set": {"description": new_desc, "Type04": "1"}})
 
 def getPocNum():
     iot = connect_iot2()
@@ -208,9 +261,18 @@ def getPocNum():
         cveid = "CVE-" + cve
         result = iot.find_one({"CVE-ID": cveid})
         if result != None:
+            print(p["code_url"])
             print(cveid)
+            iot.update_one({"CVE-ID": cveid}, {"$set": {"POC": p["code_url"]}})
             count += 1
     print("IOT漏洞共有POC {}个...".format(count))
+
+def getPocNum1():
+    iot = connect_iot2()
+    for vuln in iot.find():
+        cveid = vuln["CVE-ID"]
+        print(cveid)
+        iot.update_one({"CVE-ID": cveid}, {"$set": {"POC": "暂无PoC"}})
 
 def fun():
     poc = connect_exploit()
@@ -220,21 +282,77 @@ def fun():
         new = url.replace("/exploits//","/")
         poc.update_one({"edb_id": id}, {"$set": {"code_url": new}})
 
+
+def add_type01():
+    iot = connect_iot2()
+    for item in iot.find():
+        id = item["CVE-ID"]
+        type = ""
+        description = item["description"]
+        if description.find("拒绝服务") != -1 or description.find("Denial Of Service") != -1:
+            type = "拒绝服务"
+        elif description.find("执行代码") != -1 or description.find("Execute Code") != -1:
+            type = "执行代码"
+        elif description.find("溢出") != -1 or description.find("Overflow") != -1:
+            type = "溢出"
+        elif description.find("跨站脚本") != -1 or description.find("Cross Site Scripting") != -1:
+            type = "跨站脚本"
+        elif description.find("目录遍历") != -1 or description.find("Directory traversal") != -1:
+            type = "目录遍历"
+        elif description.find("绕过") != -1 or description.find("Bypass a restriction or similar") != -1:
+            type = "绕过"
+        elif description.find("获取信息") != -1 or description.find("Obtain Information") != -1:
+            type = "获取信息"
+        elif description.find("获取权限") != -1 or description.find("Gain privileges") != -1:
+            type = "获取权限"
+        elif description.find("注入") != -1 or description.find("Sql Injection") != -1:
+            type = "SQL注入"
+        elif description.find("文件包含") != -1 or description.find("File Inclusion") != -1:
+            type = "文件包含"
+        elif description.find("内存错误") != -1 or description.find("Memory corruption") != -1:
+            type = "内存错误"
+        elif description.find("请求伪造") != -1 or description.find("CSRF") != -1:
+            type = "跨站请求伪造"
+        elif description.find("响应拆分") != -1 or description.find("Http response splitting") != -1:
+            type = "HTTP响应拆分"
+        print(type)
+        iot.update_one({"CVE-ID": id}, {"$set": {"Type01": type}})
+
+def add_type02():
+    pass
+
+def add_type03():
+    pass
+
+def add_type04():
+    pass
+
+def add_poc():
+    pass
+
 if __name__ == '__main__':
-    # 从 nvd01 中提取出 iot 数据存入 iot
-    nvd2iot()
-    # iot => iot2 添加 title 字段
-    convert()
-    # 翻译 title
-    translate_title()
-    # 将 references 中的 name 作为 title; 更改日期格式: 2021-10-06T20:15Z = > 2021-10-06
-    title2()
-    # 将 cvssV3 的攻击向量转化为中文
-    convert_cvssv3_attacker()
-    translate_title2()
-    # 将漏洞类型转化为中文
-    tranlate_type01()
-    # 将 cvssV3 中的危险级别翻译为中文
-    convert_severity()
-    # 翻译漏洞描述信息
-    translate_description()
+    # # 从 nvd01 中提取出 iot 数据存入 iot
+    # nvd2iot()
+    # # iot => iot2 添加 title 字段
+    # convert()
+    # 添加 jvn_title 作为标题
+    # add_jvn_title()
+    # # 将 references 中的 name 作为 title; 更改日期格式: 2021-10-06T20:15Z = > 2021-10-06
+    # add_reference_title()
+    # 将截取漏洞描述作为标题
+    # add_description_title()
+    # # 将 cvssV3 的攻击向量转化为中文
+    # convert_cvssv3_attacker()
+    # # 将漏洞类型转化为中文
+    # tranlate_type01()
+    # # 将 cvssV3 中的危险级别翻译为中文
+    # convert_severity()
+
+    # # 翻译 title
+    # translate_title()
+    # # 翻译漏洞描述信息
+    # translate_description()
+    # converse()
+    # add_type01()
+    getPocNum1()
+    # translate_CvssV2()

@@ -3,7 +3,7 @@
     <dv-decoration-8 class="header-left-decoration" />
     <dv-decoration-5 class="header-center-decoration" />
     <dv-decoration-8 class="header-right-decoration" :reverse="true" />
-    <div class="center-title">鲲鹏全网漏洞态势感知系统</div>
+    <div class="center-title">天防IoT漏洞动态追踪系统</div>
   </div>
 </template>
 

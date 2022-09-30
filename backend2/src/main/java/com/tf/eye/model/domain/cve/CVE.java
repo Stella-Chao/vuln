@@ -1,8 +1,12 @@
-package com.tf.eye.model.domain;
+package com.tf.eye.model.domain.cve;
 
+import com.tf.eye.model.domain.Reference;
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author zh
@@ -13,13 +17,25 @@ public class CVE implements Serializable {
 
     private static final long serialVersionUID = 2092988041157909574L;
 
-    String data_type;
+    @Field("data_type")
+    String dataType;
 
-    String data_format;
+    @Field("data_format")
+    String dataFormat;
 
-    String data_version;
+    @Field("data_version")
+    String dataVersion;
 
+    @Field("CVE_data_meta")
+    CveDataMeta cveDataMeta;
 
+    @Field("problemtype")
+    ProblemType problemType;
 
+    @Field("references")
+    Reference references;
+
+    @Field("description")
+    Description description;
 
 }

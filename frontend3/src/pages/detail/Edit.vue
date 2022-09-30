@@ -79,6 +79,7 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!', this.form);
+      this.update()
     },
     getVulnData(id) {
         axios.get(this.base_url + '/tf/cve?cveID=' + id)
@@ -100,7 +101,26 @@ export default {
         console.log(this.form)
     },
     update() {
-        console.log("修改成功!")
+      let data = {}
+      data['cveid'] = this.form['cveId']
+      data['title'] = this.form['name']
+      data['cweId'] = this.form['cweId']
+      data['type'] = this.form['type']
+      data['description'] = this.form['description']
+      data['score'] = this.form['score']
+      data['severity'] = this.form['severity']
+      data['complexity'] = this.form['complexity']
+      data['attackVector'] = this.form['attackVector']
+      data['vector'] = this.form['vector']
+      axios.post(base_url + '/tf/update', data)
+      .then(res=>{
+        console.log(data)
+        if(res.data === "success") {
+          this.$message.success("修改成功", 3)
+        } else {
+          this.$message.info("修改失败", 3)
+        }
+      })
     }
   },
 };

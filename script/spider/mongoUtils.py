@@ -109,6 +109,16 @@ def connect_poc():
     connection = connect_vuln().poc
     return connection
 
+# 连接 cve2
+def connect_cve2():
+    connection = connect_vuln().cve2
+    return connection
+
+# 连接 cve2
+def connect_subscribe():
+    connection = connect_vuln().subscribe
+    return connection
+
 '''从cve中抽取出有用字段存入tfiot'''
 def convert1():
     conn1 = connect_nvd()

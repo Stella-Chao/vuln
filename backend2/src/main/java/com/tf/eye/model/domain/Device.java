@@ -52,7 +52,7 @@ public class Device implements Serializable {
     private String brandCN;
 
     /* brand_alias */
-    @Field("厂商别名")
+    @Field("brand_alias")
     private String brandAlias;
 
 }

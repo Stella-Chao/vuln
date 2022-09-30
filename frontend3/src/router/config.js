@@ -53,13 +53,34 @@ const options = {
           component: () => import('@/pages/form/basic'),
         },
         {
+          path: 'sublist',
+          name: '提交列表',
+          meta: {
+            icon: 'form',
+            page: {
+              cacheAble: false
+            }
+          },
+          // component: PageView,
+          component: () => import('@/pages/list/SubmitList'),
+        },
+        {
           path: 'list',
-          name: '漏洞列表',
+          name: 'IoT漏洞列表',
           meta: {
             icon: 'table'
           },
           // component: PageView,
           component: () => import('@/pages/list/QueryList'),
+        },
+        {
+          path: 'cve',
+          name: 'CVE',
+          meta: {
+            icon: 'table'
+          },
+          // component: PageView,
+          component: () => import('@/pages/list/QueryList2'),
         },
         {
           path: 'details',
@@ -76,9 +97,24 @@ const options = {
               component: () => import('@/pages/detail/BasicDetail')
             },
             {
+              path: 'basic2',
+              name: '基础详情页2',
+              component: () => import('@/pages/detail/BasicDetail2')
+            },
+            {
+              path: 'subdetail',
+              name: '提交详情页',
+              component: () => import('@/pages/detail/SubmitDetail')
+            },
+            {
               path: 'edit',
               name: '编辑页',
               component: () => import('@/pages/detail/Edit')
+            },
+            {
+              path: 'submitEdit',
+              name: '提交编辑页',
+              component: () => import('@/pages/detail/SubmitEdit')
             }
           ]
         },
@@ -145,6 +181,14 @@ const options = {
           },
           // component: PageView,
           component: () => import('@/pages/device/DeviceList'),
+        },
+        {
+          path: 'deviceedit',
+          name: '设备信息编辑',
+          component: () => import('@/pages/device/DeviceEdit'),
+          meta: {
+            invisible: true
+          }
         },
         {
           path: 'about',

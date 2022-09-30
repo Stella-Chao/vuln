@@ -12,6 +12,9 @@ public class SubmitVuln implements Serializable {
 
     private static final long serialVersionUID = 1055321345539809339L;
 
+    @Field("tfid")
+    private String tfid;
+
     /* 漏洞标题 */
     @Field("title")
     private String title;
@@ -30,7 +33,7 @@ public class SubmitVuln implements Serializable {
 
     /* 受影响产品厂商 */
     @Field("ventor")
-    private String ventor;
+    private String vendor;
 
     /* 详细描述 */
     @Field("description")

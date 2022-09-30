@@ -66,11 +66,14 @@ public class TFiotController {
     public String submitVuln(@RequestBody JSONObject param) {
         System.out.println(param);
         SubmitVuln vuln = new SubmitVuln();
+        if (param.get("title") == null || param.get("description") == null || param.get("type") == null) {
+            return "failed";
+        }
         vuln.setTitle(param.get("title").toString());
         vuln.setDate(new Date());
         vuln.setAddress(param.get("address").toString());
         vuln.setAttacker(param.get("attacker").toString());
-        vuln.setVentor(param.get("vendor").toString());
+        vuln.setVendor(param.get("vendor").toString());
         vuln.setProduct(param.get("product").toString());
         vuln.setType(param.get("type").toString());
         vuln.setDescription(param.get("description").toString());
@@ -79,7 +82,7 @@ public class TFiotController {
             return "success";
         } catch (Exception e) {
             System.out.println(e);
-            return "failure";
+            return "failed";
         }
     }
 
@@ -121,5 +124,32 @@ public class TFiotController {
         total += iotDao.getCriticalNum();
         System.out.println("高危漏洞数量：" + total);
         return total;
+    }
+
+    @PostMapping("update")
+    public String updateVuln(@RequestBody JSONObject param) {
+        return iotDao.updateVulnByID(param);
+    }
+
+    @GetMapping("get/month")
+    public String getRecentMonth() {
+        return iotDao.getMonthly();
+    }
+
+    @GetMapping("get/vendor")
+    public String getTopVendor() {
+        JSONObject body = new JSONObject();
+        body.put("海康威视", iotDao.getVendorNum("ikvision"));
+        body.put("大华", iotDao.getVendorNum("Dahua"));
+        body.put("思科", iotDao.getVendorNum("Cisco"));
+        body.put("路由器", iotDao.getVendorNum("router"));
+        body.put("摄像头", iotDao.getVendorNum("camera"));
+        body.put("打印机", iotDao.getVendorNum("printer"));
+        body.put("手机", iotDao.getVendorNum("phone"));
+        body.put("索尼", iotDao.getVendorNum("sony"));
+        body.put("腾达", iotDao.getVendorNum("tenda"));
+//        body.put("宇视", iotDao.getVendorNum("uniview"));
+        System.out.println(body);
+        return body.toJSONString();
     }
 }

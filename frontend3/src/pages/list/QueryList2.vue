@@ -126,7 +126,7 @@
             <a-icon type="delete" />删除
           </a> -->
           <!-- <router-link :to="`/list/query/detail/${record.key}`" >详情</router-link> -->
-          <router-link :to="{name:'基础详情页',query:{id:record.cveID}}" >详情</router-link>
+          <router-link :to="{name:'基础详情页2',query:{id:record.cveID}}" >详情</router-link>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle" />
@@ -142,7 +142,6 @@ import StandardTable from '@/components/table/StandardTable'
 // import {dataSource as ds} from '@/services'
 import axios from 'axios'
 const base_url = process.env.VUE_APP_API_BASE_URL
-// const base_url = 'http://api.eye.tf.lab/eye'
 const columns = [
   {
     title: 'CVE-ID',
@@ -166,7 +165,7 @@ const columns = [
       console.log("v:", v)
       if ("cvssV3" in record) {
         return record["cvssV3"]["cvssV3"]["baseSeverity"]
-      }
+      } 
       return record["cvssV2"]["severity"]
      },
     needTotal: true,
@@ -228,11 +227,11 @@ export default {
 
   methods: {
     getData() {
-        axios.get(base_url + '/tf/get/count').then(res=>{
+        axios.get(base_url + '/cve/get/count').then(res=>{
           console.log('漏洞总数量：',res.data)
           this.pagination.total = res.data
         })
-        this.url = base_url + '/tf/list/'
+        this.url = base_url + '/cve/list/'
         axios.get(this.url + this.pagination.defaultPageSize +'/1').then(res => {
           console.log(res.data)
           this.dataSource = res.data
@@ -257,7 +256,7 @@ export default {
 
     },
     search() {
-        this.url = base_url +'/tf/search2?cveID='+this.cveid+'&severity='+this.severity+'&attack='+this.attack+'&type='+this.type+'&description='+this.descri
+        this.url = base_url +'/cve/search2?cveID='+this.cveid+'&severity='+this.severity+'&attack='+this.attack+'&type='+this.type+'&description='+this.descri
         axios.get(this.url +'&size='+this.pagination.defaultPageSize+'&page=1').then(res=>{
         console.log('查询结果...')
         console.log(res.data.result)

@@ -1,7 +1,7 @@
 import datetime
 import smtplib
 from email.message import EmailMessage
-from mongoUtils import connect_iot2, connect_user
+from mongoUtils import connect_iot2, connect_subscribe
 import sys, codecs
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
@@ -42,7 +42,7 @@ def send(receivers, news):
         print('error', e)
 
 def get_users():
-    collection = connect_user()
+    collection = connect_subscribe()
     list = []
     for user in collection.find():
         if len(user["email"]) > 0:
@@ -64,4 +64,4 @@ if __name__ == '__main__':
     for receiver in receivers:
         print(receiver)
     news = get_news()
-    send(get_users(), get_news())
+    # send(get_users(), get_news())

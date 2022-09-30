@@ -41,7 +41,7 @@ public class TFiot implements Serializable {
 
     /* CVSS3 */
     @Field("baseMetricV3")
-    private BaseMatricV3 cvssV3;
+    private BaseMetricV3 cvssV3;
 
     /* 发布时间 */
     @Field("publishedDate")

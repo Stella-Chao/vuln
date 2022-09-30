@@ -10,7 +10,7 @@
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-input v-model="brand" placeholder="请输入"/>
+              <a-input v-model="brand" placeholder="请输入设备厂商"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -21,7 +21,7 @@
               :labelCol="{span: 5}"
               :wrapperCol="{span: 18, offset: 1}"
             >
-              <a-input v-model="product" placeholder="-" :disabled="true"/>
+              <a-input v-model="product" placeholder="请输入设备型号"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -43,12 +43,13 @@
         </div>
         <div slot="action" slot-scope="{record}">
           
-          <router-link :to="{name:'用户编辑',query:{user:record}}" >
+          <router-link :to="{name:'设备信息编辑',query:{device:record}}" >
             <a style="margin-right: 8px">
               <a-icon type="edit"/>编辑
             </a>
           </router-link>
-          <a @click="deleteRecord(record.product)" v-auth="`delete`">
+          <!-- <a @click="deleteRecord(record.product)" v-auth="`delete`"> -->
+          <a @click="deleteRecord(record.product)">
             <a-icon type="delete" />删除
           </a>
           <!-- <router-link :to="`/list/query/detail/${record.key}`" >详情</router-link> -->
@@ -84,7 +85,7 @@ const columns = [
   },
   {
     title: '别名',
-    dataIndex: 'brand_alias',
+    dataIndex: 'brandAlias',
     // scopedSlots: { customRender: 'description' }
   },
   {
@@ -113,6 +114,7 @@ export default {
       dataSource: dataSource,
       product: "",
       brand: "",
+      url:"",
       pagination:{
         defaultPageSize:20,
         showTotal: total => `共${total}条记录`,
@@ -128,9 +130,9 @@ export default {
       },
     }
   },
-  authorize: {
-    deleteRecord: 'delete'
-  },
+  // authorize: {
+  //   deleteRecord: 'delete'
+  // },
   created() {
     console.log(base_url)
     this.getData()
@@ -168,19 +170,14 @@ export default {
 
     },
     search() {
-        axios.get(base_url +'/device/find?product=' + this.product).then(res=>{
+        this.url = base_url +'/device/search?brand=' + this.brand + '&product=' + this.product
+        axios.get(this.url + '&size='+this.pagination.defaultPageSize+'&page=1').then(res=>{
           console.log('查询结果...')
-          console.log(res.data)
-          // console.log(this.pagination)
-          // this.pagination.current = this.pagination.defaultCurrent
-          let list = []
-          list.push(res.data)
-          this.dataSource = list
-          if (res.data === undefined) {
-            this.pagination.total = 0
-          } else {
-            this.pagination.total = 1
-          }
+          console.log(res.data.result)
+          console.log(this.pagination)
+          this.pagination.current = this.pagination.defaultCurrent
+          this.dataSource = res.data.result
+          this.pagination.total = res.data.total
           
       })
     },

@@ -128,11 +128,12 @@
       <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" >
           <a-form-item label="Email">
             <a-input
+              v-model="email"
               v-decorator="['Email', { rules: [{ required: true, message: '请输入邮箱地址' }] }]"
             />
           </a-form-item>
           <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-          <a-button type="primary" html-type="submit">
+          <a-button type="primary" html-type="submit" @click="submitEmail">
             订阅
           </a-button>
         </a-form-item>
@@ -154,16 +155,7 @@ import {request, METHOD} from '@/utils/request'
 // import Trend from '../../../components/chart/Trend'
 import axios from 'axios'
 
-const rankList = [{name:"海康威视", total:100},
-                  {name:"思科",total: 99},
-                  {name:"厂商3",total: 98},
-                  {name:"厂商4",total: 97},
-                  {name:"厂商5",total: 96},
-                  {name:"厂商6",total: 95},
-                  {name:"厂商7",total: 94},
-                  {name:"厂商8",total: 93},
-                  {name:"厂商9",total: 92},
-                  {name:"厂商10",total: 91}]
+const rankList = []
 
 const plainOptions = ['视频监控类', '智能家居类', '工业控制类', '移动设备类'];
 const defaultCheckedList = [];
@@ -183,7 +175,8 @@ export default {
       total: "",
       poc: "",
       submit: "",
-      highNum: ""
+      highNum: "",
+      email: ""
     }
   },
 
@@ -205,6 +198,21 @@ export default {
           console.log('高危漏洞：',res.data)
           this.highNum = res.data
         })
+        axios.get(base_url + '/tf/get/vendor').then(res=>{
+          console.log(res.data)
+          let rankList0 = []
+          let rank = res.data
+          for (let key in rank) {
+            let dict = {}
+            dict["name"] = key
+            dict["total"] = rank[key]
+            rankList0.push(dict)
+          }
+          let tmp = rankList0.sort((a, b) => b.total - a.total);
+          for (let i = 0; i < tmp.length; i++) {
+            rankList.push(tmp[i])
+          }
+        })
     },
     onChange(checkedList) {
       this.indeterminate = !!checkedList.length && checkedList.length < plainOptions.length;
@@ -217,6 +225,19 @@ export default {
         checkAll: e.target.checked,
       });
     },
+    submitEmail() {
+      let data = {}
+      data['type'] = 0
+      data['email'] = this.email
+      axios.post(base_url + '/subscribe/submit', data)
+        .then(res=>{
+          if (res.data === "success") {
+            this.$message.success("订阅成功!",3)
+          } else {
+            this.$message.error("订阅失败！")
+          }
+        })
+    }
   },
   created() {
     setTimeout(() => this.loading = !this.loading, 1000)

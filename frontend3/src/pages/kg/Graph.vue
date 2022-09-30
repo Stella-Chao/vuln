@@ -99,14 +99,28 @@ export default {
     console.log(this.vuln)
     this.graph = echarts.init(document.getElementById("graph"));
     let pointList1 = ["详情"];
-    pointList1.push(this.vuln["type01"][0]);
+    if (this.vuln["type01"].length > 0) {
+      pointList1.push(this.vuln["type01"][0])
+    } else {
+      pointList1.push("未知")
+    }
     pointList1.push(this.vuln["cweID"][0]);
     let pointList2 = ["攻击"];
     pointList2.push(String(this.vuln["cvssV3"]["cvssV3"]["baseScore"]));
     pointList2.push(this.vuln["cvssV3"]["cvssV3"]["baseSeverity"]);
     pointList2.push(this.vuln["cvssV3"]["cvssV3"]["attackVector"]);
     pointList2.push(this.vuln["cvssV3"]["cvssV3"]["attackComplexity"]);
-    let pointList3 = ["影响", "硬件", "Cisco", "路由器"];
+    let pointList3 = ["影响", "硬件"];
+    console.log("cpe:", this.vuln.cpe.length)
+    if (this.vuln.cpe.length > 0) {
+      let uri = this.vuln.cpe[0]["cpe23Uri"].split(":")
+      pointList3.push(uri[3])
+      pointList3.push(uri[4])
+    } else {
+      pointList3.push("厂商")
+      pointList3.push("设备")
+    }
+    pointList3.push()
     let pointList4 = ["CVE"];
     this.setPointData(pointList1, "红");
     this.setPointData(pointList2, "蓝");
