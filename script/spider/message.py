@@ -64,4 +64,4 @@ if __name__ == '__main__':
     for receiver in receivers:
         print(receiver)
     news = get_news()
-    # send(get_users(), get_news())
+    send(get_users(), get_news())
