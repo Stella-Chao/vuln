@@ -18,3 +18,4 @@ public class BaseMatricV3 implements Serializable {
     /* 影响性分数 */
     private Double impactScore;
 }
+
