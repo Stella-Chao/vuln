@@ -106,11 +106,12 @@
                 <a-icon type="edit"/>编辑
               </a>
             </router-link>
-            <!-- <a @click="deleteRecord(record.key)" v-auth="`delete`">
-              <a-icon type="delete" />删除
-            </a> -->
+            
             <!-- <router-link :to="`/list/query/detail/${record.key}`" >详情</router-link> -->
             <router-link :to="{name:'提交详情页',query:{id:record.tfid}}" >详情</router-link>
+            <a @click="deleteRecord(record.tfid)">
+              <a-icon type="delete" />  删除
+            </a>
           </div>
           <template slot="statusTitle">
             <a-icon @click.native="onStatusTitleClick" type="info-circle" />
@@ -192,9 +193,6 @@
         },
       }
     },
-    authorize: {
-      deleteRecord: 'delete'
-    },
     created() {
       console.log(base_url)
       this.getData()
@@ -251,8 +249,14 @@
         this.getData()
       },
       deleteRecord(key) {
-        this.dataSource = this.dataSource.filter(item => item.key !== key)
-        this.selectedRows = this.selectedRows.filter(item => item.key !== key)
+        console.log(key)
+        let param = {}
+        param["tfid"] = key
+        axios.post(base_url + '/submit/delete', param).then(res => {
+          console.log(res.data)
+          this.getData()
+          this.$message.success("删除成功！", 2)
+        })
       },
       toggleAdvanced () {
         this.advanced = !this.advanced
