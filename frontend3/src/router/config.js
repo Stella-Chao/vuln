@@ -118,13 +118,13 @@ const options = {
             }
           ]
         },
-        {
-          path: 'intelligence',
-          name: '威胁情报',
-          meta: {
-            icon: 'profile'
-          },
-        },
+        // {
+        //   path: 'intelligence',
+        //   name: '威胁情报',
+        //   meta: {
+        //     icon: 'profile'
+        //   },
+        // },
         {
           path: 'kgraph',
           name: '漏洞图谱',
@@ -154,7 +154,8 @@ const options = {
             },
             {
               path: 'smart',
-              name: '智能家居类'
+              name: '智能家居类',
+              component: () => import('@/pages/kg/Graph04')
             }
           ]
         },
@@ -181,6 +182,18 @@ const options = {
           },
           // component: PageView,
           component: () => import('@/pages/device/DeviceList'),
+        },
+        {
+          path: 'alertlist',
+          name: '预警管理',
+          meta: {
+            icon: 'table',
+            authority: {
+              role: 'admin'
+            }
+          },
+          // component: PageView,
+          component: () => import('@/pages/list/AlertList2'),
         },
         {
           path: 'deviceedit',

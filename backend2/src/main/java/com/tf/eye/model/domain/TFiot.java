@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.io.Serializable;
 import java.util.List;
 @Data
-@Document(collection = "iot2")
+@Document(collection = "iot3")
 public class TFiot implements Serializable {
 
     private static final long serialVersionUID = -3785669996632327769L;

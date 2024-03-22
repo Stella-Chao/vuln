@@ -316,6 +316,7 @@ public class TFiotDao {
         int count = 0;
         List<TFiot> vulns = mongoTemplate.findAll(TFiot.class);
         for (TFiot item: vulns) {
+            if (item.getType01() == null) continue;
             for (String type : item.getType01()) {
                 if (type.equals("拒绝服务") || type.equals("Denial Of Service")) {
                     doss ++ ;

@@ -5,7 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@MapperScan("com.tf.backend.dao")
+@MapperScan("com.tf.eye.repository")
 @SpringBootApplication
 @EnableMongoPlus
 public class Backend2Application {

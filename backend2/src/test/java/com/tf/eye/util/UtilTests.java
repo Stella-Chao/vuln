@@ -20,17 +20,13 @@ public class UtilTests {
     void neo4j() {
 //        neo4jUtil.clearNeo4j();
 
-//        neo4jUtil.addTypeNode();
+        neo4jUtil.addPocNode();
+        neo4jUtil.addMeasure();
 
-
+        neo4jUtil.addWeaknessNode();
+        neo4jUtil.addCapecNode();
+        neo4jUtil.addProductNode();
         neo4jUtil.mongo2Neo4j();
-
-//        neo4jUtil.addProductNode();
-
-//        neo4jUtil.test();
-
-
-
     }
 
 }

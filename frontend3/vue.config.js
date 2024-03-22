@@ -46,15 +46,9 @@ module.exports = {
     //   }
     // }
   },
-  pluginOptions: {
-    'style-resources-loader': {
-      preProcessor: 'less',
-      patterns: [path.resolve(__dirname, "./src/theme/theme.less")],
-    }
-  },
   configureWebpack: config => {
-    config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
-    config.performance = {
+      config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
+      config.performance = {
       hints: false
     }
     config.plugins.push(
@@ -80,6 +74,21 @@ module.exports = {
     // if prod, add externals
     if (isProd) {
       config.externals = assetsCDN.externals
+    }
+  },
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'less',
+      patterns: [path.resolve(__dirname, "./src/theme/theme.less")],
+    }
+  },
+  configureWebpack: {
+    module: {
+      rules: [{
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto'
+      }]
     }
   },
   chainWebpack: config => {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("subscribe")
@@ -21,11 +22,11 @@ public class SubscribeController {
 
 
     @PostMapping("submit")
-    public String submitVuln(@RequestBody JSONObject param) {
+    public String submitVuln(@RequestParam Map<String,String> param) {
         System.out.println(param);
         Subscribe sub = new Subscribe();
-        String email = (String)param.get("email");
-        String type = String.valueOf(param.get("type"));
+        String email = param.get("email");
+        String type = param.get("type");
         sub.setEmail(email);
         sub.setType(type);
         try {

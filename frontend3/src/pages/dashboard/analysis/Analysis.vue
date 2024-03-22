@@ -3,43 +3,43 @@
     <a-row style="margin-top: 0" :gutter="[24, 24]">
       <a-col :sm="24" :md="12" :xl="6">
         <chart-card :loading="loading" title="IOT漏洞总数" :total= "total">
-          <!-- <a-tooltip :title="$t('introduce')" slot="action">
+          <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o"/>
-          </a-tooltip> -->
+          </a-tooltip>
           <div>
-            <!-- <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
-            <trend :term="$t('dod')" :target="100" :value="89" :scale="0" /> -->
+            <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
+            <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
           </div>
-          <!-- <div slot="footer">日均新增漏洞数量 <span>1</span></div> -->
+          <div slot="footer">日均新增漏洞数量 <span>1</span></div>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6">
         <chart-card :loading="loading" title="漏洞提交总数" :total="submit">
-          <!-- <a-tooltip :title="$t('introduce')" slot="action">
+          <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
             <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
             <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
           </div>
-          <div slot="footer">日均提交漏洞数 <span>1</span></div> -->
+          <div slot="footer">日均提交漏洞数 <span>1</span></div>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6">
         <chart-card :loading="loading" title="POC总数" :total="poc">
-          <!-- <a-tooltip :title="$t('introduce')" slot="action">
+          <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o" />
-          </a-tooltip> -->
-          <!-- <div>
+          </a-tooltip>
+          <div>
             <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
             <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
-          </div> -->
-          <!-- <div slot="footer">日均新增POC总数 <span>1</span></div> -->
+          </div>
+          <div slot="footer">日均新增POC总数 <span>1</span></div>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6">
         <chart-card :loading="loading" title="高危漏洞" :total="highNum">
-          <!-- <a-tooltip :title="$t('introduce')" slot="action">
+          <a-tooltip :title="$t('introduce')" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
@@ -48,7 +48,7 @@
           <div slot="footer" style="white-space: nowrap;overflow: hidden">
             <trend style="margin-right: 16px" :term="$t('wow')" :percent="12" :is-increase="true" :scale="0" />
             <trend :term="$t('dod')" :target="100" :value="89" :scale="0" />
-          </div> -->
+          </div>
         </chart-card>
       </a-col>
     </a-row>
@@ -125,7 +125,7 @@
         <a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange" />
       </div>
       <br/>
-      <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" >
+      <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" :style="{ borderBottom: '1px solid #E9E9E9' }">
           <a-form-item label="Email">
             <a-input
               v-model="email"
